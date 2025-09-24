@@ -1,8 +1,37 @@
+using CardDeck.Api.Models;
+using CardDeck.Api.Services;
+using DotNetEnv;
+using Microsoft.EntityFrameworkCore;
+using Serilog;
+
+Env.Load(); // load .env file
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+// load connection string from environment variable
+string? connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
+if (string.IsNullOrEmpty(connectionString))
+{
+    throw new InvalidOperationException("Connection string not found in environment variables.");
+}
+
+// register DbContext 
+builder.Services.AddDbContext<CardDeckContext>(options =>
+    options.UseSqlServer(connectionString));
+
+// add services to the container
 builder.Services.AddOpenApi();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+builder.Services.AddDbContext<CardDeckContext>(options =>
+    options.UseSqlServer(connectionString));
+
+builder.Services.AddScoped<IStatusService, StatusService>();
+
+// configure logger
+Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(builder.Configuration).CreateLogger(); // read from appsettings.json
+builder.Host.UseSerilog();
 
 var app = builder.Build();
 
@@ -10,32 +39,19 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
+app.MapGet("/status", async (IStatusService service) =>
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
+    return Results.Ok(await service.CheckConnectionAsync());
 })
-.WithName("GetWeatherForecast");
+.WithName("GetStatus")
+.WithTags("Status");
+
+Log.Information("Application starting...");
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

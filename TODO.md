@@ -7,9 +7,9 @@
     - [ ] docker compose.yml
 - [ ] do backend
     - [X] api scaffolding
-    - [ ] xunit test setup
+    - [X] xunit test setup
     - [ ] efcore setup with database
-    - [ ] /status endpoint
+    - [X] /status endpoint
     - [ ] plan endpoints
 - [ ] do frontend
     - [ ] ...or not.
