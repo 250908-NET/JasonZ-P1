@@ -8,24 +8,23 @@ Env.Load(); // load .env file
 
 var builder = WebApplication.CreateBuilder(args);
 
-// load connection string from environment variable
-string? connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
-if (string.IsNullOrEmpty(connectionString))
-{
-    throw new InvalidOperationException("Connection string not found in environment variables.");
-}
-
 // register DbContext 
 builder.Services.AddDbContext<CardDeckContext>(options =>
-    options.UseSqlServer(connectionString));
+{
+    // load connection string from environment variable
+    string? connectionString = builder.Configuration.GetValue<string>("DB_CONNECTION_STRING");
+    if (string.IsNullOrEmpty(connectionString))
+    {
+        throw new InvalidOperationException("Connection string 'DB_CONNECTION_STRING' not found in configuration.");
+    }
+
+    options.UseSqlServer(connectionString);
+});
 
 // add services to the container
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-builder.Services.AddDbContext<CardDeckContext>(options =>
-    options.UseSqlServer(connectionString));
 
 builder.Services.AddScoped<IStatusService, StatusService>();
 
@@ -55,3 +54,5 @@ app.MapGet("/status", async (IStatusService service) =>
 Log.Information("Application starting...");
 
 app.Run();
+
+public partial class Program { } // for integration testing

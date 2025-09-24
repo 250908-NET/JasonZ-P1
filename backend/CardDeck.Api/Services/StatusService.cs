@@ -26,7 +26,7 @@ public class StatusService(CardDeckContext dbContext, ILogger<StatusService> log
 
         return new StatusResult(new Dictionary<string, bool>
         {
-            { "database", isConnected }
+            { "Database", isConnected }
         });
     }
 }
