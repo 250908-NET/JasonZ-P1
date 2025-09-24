@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using DotNetEnv;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace CardDeck.Api.Models;
 
@@ -18,7 +15,7 @@ public partial class CardDeckContext : DbContext
 
     // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     //     => optionsBuilder.UseSqlServer(_connectionString);
-    
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         OnModelCreatingPartial(modelBuilder);
