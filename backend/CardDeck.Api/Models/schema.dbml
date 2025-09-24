@@ -1,0 +1,55 @@
+// visualization: https://dbdiagram.io/d
+// docs: https://dbml.dbdiagram.io/docs
+
+Table Suits {
+  Id integer [primary key]
+  Name nvarchar(15) [not null, unique]
+  Symbol nchar(1) [not null]
+  ColorRGB integer [default: 0]
+}
+
+// the base card definitions
+Table Cards {
+  Id integer [primary key]
+  Rank nvarchar(5) [not null] // A, 2-10, J, Q, K, etc.
+  SuitId integer [not null]
+  Effects nvarchar(MAX) [not null] // json array string, eg. "[{\"operation\":\"+\",\"value\":1}]"
+  CreatedAt datetimeoffset [default: `SYSDATETIMEOFFSET()`]
+  UpdatedAt datetimeoffset [default: `SYSDATETIMEOFFSET()`]
+}
+
+// the shared global "deck" of cards to pull from
+Table AvailableCards {
+  Id integer [primary key]
+  CardId integer [not null]
+  CreatedAt datetimeoffset [default: `SYSDATETIMEOFFSET()`]
+}
+
+Table GameCards {
+  Id integer [primary key]
+  GameId uniqueidentifier [not null]
+  CardId integer [not null]
+  OwnerType tinyint [not null] // 0 -> player, 1 -> dealer
+}
+
+Table Games {
+  Id uniqueidentifier [primary key] // uuidv7
+  
+  // --- session-level data ---
+  Target decimal(18) [default: 21.0]
+  Money decimal(18,2) [default: 1000.0]
+  CreatedAt datetimeoffset [default: `SYSDATETIMEOFFSET()`]
+
+  // --- round-level data ---
+  Round integer [default: 0]
+  Bet decimal(18,2) [default: 0.0]
+  Status tinyint [default: 0] // 0 -> dealing to player, 1 -> dealing to dealer, 2 -> round end
+  UpdatedAt datetimeoffset [default: `SYSDATETIMEOFFSET()`]
+}
+
+Ref: Cards.SuitId < Suits.Id
+
+Ref: AvailableCards.CardId < Cards.Id
+
+Ref: GameCards.GameId > Games.Id [delete: cascade]
+Ref: GameCards.CardId > Cards.Id
