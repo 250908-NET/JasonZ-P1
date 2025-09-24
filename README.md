@@ -8,7 +8,7 @@ Due: 2025-09-26
 
 ## Requirements
 
-- [ ] Project hosted on GitHub
+- [X] Project hosted on GitHub
 - [ ] README that describes the application and its functionalities
 - [ ] The application should be ASP.NET Core Minimal API application
 - [ ] The application should build and run
@@ -20,3 +20,12 @@ Due: 2025-09-26
 - [ ] Have 2 or more models
 - [ ] Persisting data to a SQL Server DB running in a Docker container
 - [ ] The application should communicate to DB via EF Core (Entity Framework Core)
+
+## Halfway Expectations
+
+- [ ] Repo setup
+- [ ] Minimal API and Xunit project setup and connected (at least one test written)
+- [ ] Model(s) and Repo(s) layer file structure setup
+- [ ] At least 1 endpoint tie to a model
+- [X] README.md
+- [ ] ERD
