@@ -2,7 +2,8 @@ using CardDeck.Api.Models;
 
 namespace CardDeck.Api.Services;
 
-public class StatusService(CardDeckContext dbContext, ILogger<StatusService> logger) : IStatusService
+public class StatusService(CardDeckContext dbContext, ILogger<StatusService> logger)
+    : IStatusService
 {
     private readonly CardDeckContext _dbContext = dbContext;
     private readonly ILogger<StatusService> _logger = logger;
@@ -24,9 +25,6 @@ public class StatusService(CardDeckContext dbContext, ILogger<StatusService> log
             _logger.LogWarning(ex, "Database connection failed.");
         }
 
-        return new StatusResult(new Dictionary<string, bool>
-        {
-            { "Database", isConnected }
-        });
+        return new StatusResult(new Dictionary<string, bool> { { "Database", isConnected } });
     }
 }

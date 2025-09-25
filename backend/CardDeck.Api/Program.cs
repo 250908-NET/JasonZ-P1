@@ -8,14 +8,16 @@ Env.Load(); // load .env file
 
 var builder = WebApplication.CreateBuilder(args);
 
-// register DbContext 
+// register DbContext
 builder.Services.AddDbContext<CardDeckContext>(options =>
 {
     // load connection string from environment variable
     string? connectionString = builder.Configuration.GetValue<string>("DB_CONNECTION_STRING");
     if (string.IsNullOrEmpty(connectionString))
     {
-        throw new InvalidOperationException("Connection string 'DB_CONNECTION_STRING' not found in configuration.");
+        throw new InvalidOperationException(
+            "Connection string 'DB_CONNECTION_STRING' not found in configuration."
+        );
     }
 
     options.UseSqlServer(connectionString);
@@ -44,12 +46,15 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("/status", async (IStatusService service) =>
-{
-    return Results.Ok(await service.CheckConnectionAsync());
-})
-.WithName("GetStatus")
-.WithTags("Status");
+app.MapGet(
+        "/status",
+        async (IStatusService service) =>
+        {
+            return Results.Ok(await service.CheckConnectionAsync());
+        }
+    )
+    .WithName("GetStatus")
+    .WithTags("Status");
 
 Log.Information("Application starting...");
 
