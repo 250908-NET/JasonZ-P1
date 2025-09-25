@@ -4,18 +4,20 @@ using CardDeck.Api.Models;
 using CardDeck.Api.Models.DTOs;
 using CardDeck.Api.Services;
 using FluentAssertions;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 
 namespace CardDeck.Test;
 
 public class StatusEndpointTests(WebApplicationFactory<Program> factory)
-    : IClassFixture<WebApplicationFactory<Program>>
+    : IntegrationTestBase(factory)
 {
-    private readonly WebApplicationFactory<Program> _factory = factory;
-
     [Fact]
     public async Task GetStatus_WhenServicesAreMixed_ReturnsOkAndCorrectStatusBody()
     {
@@ -28,35 +30,11 @@ public class StatusEndpointTests(WebApplicationFactory<Program> factory)
         );
         mockStatusService.Setup(s => s.CheckConnectionAsync()).ReturnsAsync(expectedStatus);
 
-        var client = _factory
-            .WithWebHostBuilder(builder =>
-            {
-                builder.ConfigureServices(services =>
-                {
-                    // mock IStatusService
-                    var statusServiceDescriptor = services.SingleOrDefault(d =>
-                        d.ServiceType == typeof(IStatusService)
-                    );
-                    if (statusServiceDescriptor != null)
-                        services.Remove(statusServiceDescriptor);
-
-                    services.AddSingleton(mockStatusService.Object);
-
-                    // mock DbContext with in-memory database
-                    var dbContextDescriptor = services.SingleOrDefault(d =>
-                        d.ServiceType == typeof(DbContextOptions<CardDeckContext>)
-                    );
-                    if (dbContextDescriptor != null)
-                        services.Remove(dbContextDescriptor);
-
-                    // ensure that no actual database connection is attempted
-                    services.AddDbContext<CardDeckContext>(options =>
-                    {
-                        options.UseInMemoryDatabase("InMemoryTestDb");
-                    });
-                });
-            })
-            .CreateClient();
+        var client = CreateTestClient(services =>
+        {
+            services.RemoveAll<IStatusService>();
+            services.AddSingleton(mockStatusService.Object);
+        });
 
         // ACT
         var response = await client.GetAsync("/status");
@@ -86,32 +64,11 @@ public class StatusEndpointTests(WebApplicationFactory<Program> factory)
         );
         mockStatusService.Setup(s => s.CheckConnectionAsync()).ReturnsAsync(expectedStatus);
 
-        var client = _factory
-            .WithWebHostBuilder(builder =>
-            {
-                builder.ConfigureServices(services =>
-                {
-                    var statusServiceDescriptor = services.SingleOrDefault(d =>
-                        d.ServiceType == typeof(IStatusService)
-                    );
-                    if (statusServiceDescriptor != null)
-                        services.Remove(statusServiceDescriptor);
-
-                    services.AddSingleton(mockStatusService.Object);
-
-                    var dbContextDescriptor = services.SingleOrDefault(d =>
-                        d.ServiceType == typeof(DbContextOptions<CardDeckContext>)
-                    );
-                    if (dbContextDescriptor != null)
-                        services.Remove(dbContextDescriptor);
-
-                    services.AddDbContext<CardDeckContext>(options =>
-                    {
-                        options.UseInMemoryDatabase("InMemoryTestDb2");
-                    });
-                });
-            })
-            .CreateClient();
+        var client = CreateTestClient(services =>
+        {
+            services.RemoveAll<IStatusService>();
+            services.AddSingleton(mockStatusService.Object);
+        });
 
         // ACT
         var response = await client.GetAsync("/status");
