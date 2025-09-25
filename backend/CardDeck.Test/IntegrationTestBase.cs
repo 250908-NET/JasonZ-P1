@@ -1,3 +1,4 @@
+using System.Text.Json;
 using CardDeck.Api.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -16,6 +17,11 @@ public abstract class IntegrationTestBase(WebApplicationFactory<Program> factory
     : IClassFixture<WebApplicationFactory<Program>>
 {
     protected readonly WebApplicationFactory<Program> _factory = factory;
+
+    protected static readonly JsonSerializerOptions _jsonOptions = new()
+    {
+        PropertyNameCaseInsensitive = true,
+    };
 
     /// <summary>
     /// Create a test HttpClient with a mocked service and in-memory database.

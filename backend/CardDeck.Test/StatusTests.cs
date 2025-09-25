@@ -1,16 +1,11 @@
 using System.Net;
 using System.Text.Json;
-using CardDeck.Api.Models;
 using CardDeck.Api.Models.DTOs;
 using CardDeck.Api.Services;
 using FluentAssertions;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 
 namespace CardDeck.Test;
@@ -43,10 +38,9 @@ public class StatusEndpointTests(WebApplicationFactory<Program> factory)
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var responseBody = await response.Content.ReadAsStringAsync();
-        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
 
-        // The API returns a StatusResult object with a `Status` property, e.g. { "status": { "Database": true, ... } }
-        var actualResult = JsonSerializer.Deserialize<StatusDTO>(responseBody, options);
+        // should return a StatusResult object, e.g. { "status": { "Database": true, ... } }
+        var actualResult = JsonSerializer.Deserialize<StatusDTO>(responseBody, _jsonOptions);
         var actualStatus = actualResult?.Status;
 
         actualStatus.Should().NotBeNull();
