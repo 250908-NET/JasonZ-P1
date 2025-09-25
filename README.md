@@ -9,11 +9,15 @@ Due: 2025-09-26
 
 ## Endpoints
 
+### Suits
+
 - [X] GET /suits: get all suits (maybe paginate lol)
 - [X] GET /suits/{suitId}: get specific suit
 - [X] POST /suits: create new suit
 - [X] PUT /suits/{suitId}: update existing suit
 - [X] DELETE /suits/{suitId}: delete existing suit
+
+### Cards
 
 - [ ] GET /cards: get all card types (maybe paginate lol)
 - [ ] GET /cards/{cardId}: get specific card type
@@ -21,9 +25,13 @@ Due: 2025-09-26
 - [ ] PUT /cards/{cardId}: update existing card type
 - [ ] DELETE /cards/{cardId}: delete existing card type
 
+### Deck
+
 - [ ] GET /deck: get all cards in global deck
 - [ ] POST /deck: insert card into global deck
 - [ ] POST /deck/draw: draw one card randomly from the deck
+
+### Blackjack
 
 - [ ] POST /blackjack: start blackjack game
 - [ ] GET /blackjack/{gameId}: return current state of game
