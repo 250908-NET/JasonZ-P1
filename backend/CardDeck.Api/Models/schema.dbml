@@ -13,7 +13,7 @@ Table Cards {
   Id integer [primary key]
   Rank nvarchar(5) [not null] // A, 2-10, J, Q, K, etc.
   SuitId integer [not null]
-  Effects nvarchar(MAX) [not null] // json array string, eg. "[{\"operation\":\"+\",\"value\":1}]"
+  Effects nvarchar(max) [not null] // json array string, eg. "[{\"operation\":\"+\",\"value\":1}]"
   CreatedAt datetimeoffset [default: `SYSDATETIMEOFFSET()`]
   UpdatedAt datetimeoffset [default: `SYSDATETIMEOFFSET()`]
 }
@@ -27,16 +27,17 @@ Table AvailableCards {
 
 Table GameCards {
   Id integer [primary key]
-  GameId uniqueidentifier [not null]
   CardId integer [not null]
+  GameId uniqueidentifier [not null]
   OwnerType tinyint [not null] // 0 -> player, 1 -> dealer
 }
 
 Table Games {
-  Id uniqueidentifier [primary key] // uuidv7
+  Id uniqueidentifier [primary key, note: `generated in backend`] // uuidv7
   
   // --- session-level data ---
   Target decimal(18) [default: 21.0]
+  DrawLimit integer [default: 5]
   Money decimal(18,2) [default: 1000.0]
   CreatedAt datetimeoffset [default: `SYSDATETIMEOFFSET()`]
 
