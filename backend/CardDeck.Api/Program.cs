@@ -3,7 +3,7 @@ using CardDeck.Api.Models.DTOs;
 using CardDeck.Api.Repository;
 using CardDeck.Api.Services;
 using DotNetEnv;
-using Microsoft.AspNetCore.Mvc;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -26,6 +26,9 @@ builder.Services.AddDbContext<CardDeckContext>(options =>
     options.UseSqlServer(connectionString);
 });
 
+// register Fluent validators
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+
 // add services to the container
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
@@ -42,7 +45,7 @@ builder.Host.UseSerilog();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
