@@ -1,3 +1,4 @@
+using CardDeck.Api.Endpoints;
 using CardDeck.Api.Models;
 using CardDeck.Api.Models.DTOs;
 using CardDeck.Api.Repository;
@@ -58,90 +59,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// -- status ---
-
-app.MapGet(
-        "/status",
-        async (IStatusService service) =>
-        {
-            return Results.Ok(await service.CheckConnectionAsync());
-        }
-    )
-    .WithName("GetStatus")
-    .WithTags("Status")
-    .Produces<StatusDTO>(StatusCodes.Status200OK)
-    .WithOpenApi();
-
-// -- suits ---
-
-app.MapGet(
-        "/suits",
-        async (ISuitService service) =>
-        {
-            return Results.Ok(await service.GetAllSuitsAsync());
-        }
-    )
-    .WithName("GetAllSuits")
-    .WithTags("Suits")
-    .Produces<List<SuitDTO>>(StatusCodes.Status200OK)
-    .WithOpenApi();
-
-app.MapGet(
-        "/suits/{suitId:int}",
-        async (int suitId, ISuitService service) =>
-        {
-            var suit = await service.GetSuitByIdAsync(suitId);
-            return suit == null ? Results.NotFound() : Results.Ok(suit);
-        }
-    )
-    .WithName("GetSuitById")
-    .WithTags("Suits")
-    .Produces<SuitDTO>(StatusCodes.Status200OK)
-    .Produces(StatusCodes.Status404NotFound)
-    .WithOpenApi();
-
-app.MapPost(
-        "/suits",
-        async (CreateSuitDTO newSuit, ISuitService service) =>
-        {
-            var createdSuit = await service.CreateSuitAsync(newSuit);
-            return Results.Created($"/suits/{createdSuit.Id}", createdSuit);
-        }
-    )
-    .WithName("CreateSuit")
-    .WithTags("Suits")
-    .Produces<SuitDTO>(StatusCodes.Status201Created)
-    .ProducesValidationProblem() // for 400 validation errors
-    .WithOpenApi();
-
-app.MapPut(
-        "/suits/{suitId:int}",
-        async (int suitId, UpdateSuitDTO updateSuit, ISuitService service) =>
-        {
-            var success = await service.UpdateSuitAsync(suitId, updateSuit);
-            return success ? Results.NoContent() : Results.NotFound();
-        }
-    )
-    .WithName("UpdateSuit")
-    .WithTags("Suits")
-    .Produces(StatusCodes.Status204NoContent)
-    .Produces(StatusCodes.Status404NotFound)
-    .ProducesValidationProblem() // for 400 validation errors
-    .WithOpenApi();
-
-app.MapDelete(
-        "/suits/{suitId:int}",
-        async (int suitId, ISuitService service) =>
-        {
-            var success = await service.DeleteSuitAsync(suitId);
-            return success ? Results.NoContent() : Results.NotFound();
-        }
-    )
-    .WithName("DeleteSuit")
-    .WithTags("Suits")
-    .Produces(StatusCodes.Status204NoContent)
-    .Produces(StatusCodes.Status404NotFound)
-    .WithOpenApi();
+// map endpoints
+app.MapStatusEndpoints();
+app.MapSuitEndpoints();
 
 // disable start message when in testing environment
 if (!app.Environment.IsEnvironment("Testing"))
