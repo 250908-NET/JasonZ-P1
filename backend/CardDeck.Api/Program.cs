@@ -68,7 +68,9 @@ app.MapGet(
         }
     )
     .WithName("GetStatus")
-    .WithTags("Status");
+    .WithTags("Status")
+    .Produces<StatusDTO>(StatusCodes.Status200OK)
+    .WithOpenApi();
 
 // -- suits ---
 
@@ -80,7 +82,9 @@ app.MapGet(
         }
     )
     .WithName("GetAllSuits")
-    .WithTags("Suits");
+    .WithTags("Suits")
+    .Produces<List<SuitDTO>>(StatusCodes.Status200OK)
+    .WithOpenApi();
 
 app.MapGet(
         "/suits/{suitId:int}",
@@ -91,7 +95,10 @@ app.MapGet(
         }
     )
     .WithName("GetSuitById")
-    .WithTags("Suits");
+    .WithTags("Suits")
+    .Produces<SuitDTO>(StatusCodes.Status200OK)
+    .Produces(StatusCodes.Status404NotFound)
+    .WithOpenApi();
 
 app.MapPost(
         "/suits",
@@ -102,7 +109,10 @@ app.MapPost(
         }
     )
     .WithName("CreateSuit")
-    .WithTags("Suits");
+    .WithTags("Suits")
+    .Produces<SuitDTO>(StatusCodes.Status201Created)
+    .ProducesValidationProblem() // for 400 validation errors
+    .WithOpenApi();
 
 app.MapPut(
         "/suits/{suitId:int}",
@@ -113,7 +123,11 @@ app.MapPut(
         }
     )
     .WithName("UpdateSuit")
-    .WithTags("Suits");
+    .WithTags("Suits")
+    .Produces(StatusCodes.Status204NoContent)
+    .Produces(StatusCodes.Status404NotFound)
+    .ProducesValidationProblem() // for 400 validation errors
+    .WithOpenApi();
 
 app.MapDelete(
         "/suits/{suitId:int}",
@@ -124,7 +138,10 @@ app.MapDelete(
         }
     )
     .WithName("DeleteSuit")
-    .WithTags("Suits");
+    .WithTags("Suits")
+    .Produces(StatusCodes.Status204NoContent)
+    .Produces(StatusCodes.Status404NotFound)
+    .WithOpenApi();
 
 // disable start message when in testing environment
 if (!app.Environment.IsEnvironment("Testing"))
