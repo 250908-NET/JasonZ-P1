@@ -16,7 +16,7 @@ Due: 2025-09-26
 - [ ] The application should have unit tests and at least 20% coverage
 - [ ] The application should communicate via HTTP(s) (Must have POST, GET, DELETE)
 - [ ] Have 1 or more DTOs
-- [ ] ERD of your models and the relationships between them
+- [X] ERD of your models and the relationships between them
 - [X] Have at least one many to many (m-m) relationship between the models in your app
 - [X] Have 2 or more models
 - [ ] Persisting data to a SQL Server DB running in a Docker container
@@ -25,8 +25,8 @@ Due: 2025-09-26
 ## Halfway Expectations
 
 - [X] Repo setup
-- [ ] Minimal API and Xunit project setup and connected (at least one test written)
-- [ ] Model(s) and Repo(s) layer file structure setup
+- [X] Minimal API and Xunit project setup and connected (at least one test written)
+- [X] Model(s) and Repo(s) layer file structure setup
 - [ ] At least 1 endpoint tie to a model
 - [X] README.md
-- [ ] ERD
+- [X] ERD
