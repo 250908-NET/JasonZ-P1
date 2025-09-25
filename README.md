@@ -7,6 +7,26 @@ The project will conclude with a presentation of working software to trainers an
 
 Due: 2025-09-26
 
+## Endpoints
+
+- [ ] GET /suits
+- [ ] POST /suits/{suitId}
+- [ ] PUT /suits/{suitId}
+- [ ] DELETE /suits/{suitId}
+
+- [ ] GET /cards: get all card types
+- [ ] POST /cards/{cardId}: create new card type
+- [ ] PUT /cards/{cardId}: update existing card type
+- [ ] DELETE /cards/{cardId}: delete existing card type
+
+- [ ] GET /deck: get all cards in global deck
+- [ ] POST /deck: insert card into global deck
+- [ ] POST /deck/draw: draw one card randomly from the deck
+
+- [ ] POST /blackjack: start blackjack game
+- [ ] GET /blackjack/{gameId}: return current state of game
+- [ ] POST /blackjack/{gameId}/{action}: execute bet/hit/stand 
+
 ## Requirements
 
 - [X] Project hosted on GitHub

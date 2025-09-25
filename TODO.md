@@ -8,9 +8,10 @@
 - [ ] do backend
     - [X] api scaffolding
     - [X] xunit test setup
-    - [ ] efcore setup with database
+    - [X] efcore setup with database
     - [X] /status endpoint
-    - [ ] plan endpoints
+    - [X] plan endpoints
+    - [ ] finish endpoints (see README for progress)
 - [ ] do frontend
     - [ ] ...or not.
 - [ ] profit
