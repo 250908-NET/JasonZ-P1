@@ -9,11 +9,11 @@ Due: 2025-09-26
 
 ## Endpoints
 
-- [ ] GET /suits: get all suits (maybe paginate lol)
-- [ ] GET /suits/{suitId}: get specific suit
-- [ ] POST /suits: create new suit
-- [ ] PUT /suits/{suitId}: update existing suit
-- [ ] DELETE /suits/{suitId}: delete existing suit
+- [X] GET /suits: get all suits (maybe paginate lol)
+- [X] GET /suits/{suitId}: get specific suit
+- [X] POST /suits: create new suit
+- [X] PUT /suits/{suitId}: update existing suit
+- [X] DELETE /suits/{suitId}: delete existing suit
 
 - [ ] GET /cards: get all card types (maybe paginate lol)
 - [ ] GET /cards/{cardId}: get specific card type

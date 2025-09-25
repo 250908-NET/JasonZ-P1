@@ -1,0 +1,199 @@
+using System.Net;
+using System.Net.Http.Json;
+using CardDeck.Api.Models.DTOs;
+using CardDeck.Api.Services;
+using FluentAssertions;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Moq;
+
+namespace CardDeck.Test;
+
+public class SuitTests(WebApplicationFactory<Program> factory) : IntegrationTestBase(factory)
+{
+    [Fact]
+    public async Task GetAllSuits_WhenSuitsExist_ReturnsOkAndListOfSuits()
+    {
+        // ARRANGE
+        var mockSuitService = new Mock<ISuitService>();
+        var expectedSuits = new List<SuitDTO>
+        {
+            new(1, "Hearts", '♥', 1),
+            new(2, "Diamonds", '♦', 2),
+        };
+        mockSuitService.Setup(s => s.GetAllSuitsAsync()).ReturnsAsync(expectedSuits);
+
+        var client = CreateTestClient(services =>
+        {
+            services.RemoveAll<ISuitService>();
+            services.AddSingleton(mockSuitService.Object);
+        });
+
+        // ACT
+        var response = await client.GetAsync("/suits");
+
+        // ASSERT
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var actualSuits = await response.Content.ReadFromJsonAsync<List<SuitDTO>>(_jsonOptions);
+        actualSuits.Should().BeEquivalentTo(expectedSuits);
+    }
+
+    [Fact]
+    public async Task GetSuitById_WhenSuitExists_ReturnsOkAndSuit()
+    {
+        // ARRANGE
+        var mockSuitService = new Mock<ISuitService>();
+        var expectedSuit = new SuitDTO(1, "Hearts", '♥', 1);
+        mockSuitService.Setup(s => s.GetSuitByIdAsync(1)).ReturnsAsync(expectedSuit);
+
+        var client = CreateTestClient(services =>
+        {
+            services.RemoveAll<ISuitService>();
+            services.AddSingleton(mockSuitService.Object);
+        });
+
+        // ACT
+        var response = await client.GetAsync("/suits/1");
+
+        // ASSERT
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var actualSuit = await response.Content.ReadFromJsonAsync<SuitDTO>(_jsonOptions);
+        actualSuit.Should().BeEquivalentTo(expectedSuit);
+    }
+
+    [Fact]
+    public async Task GetSuitById_WhenSuitDoesNotExist_ReturnsNotFound()
+    {
+        // ARRANGE
+        var mockSuitService = new Mock<ISuitService>();
+        mockSuitService
+            .Setup(s => s.GetSuitByIdAsync(It.IsAny<int>()))
+            .ReturnsAsync((SuitDTO?)null);
+
+        var client = CreateTestClient(services =>
+        {
+            services.RemoveAll<ISuitService>();
+            services.AddSingleton(mockSuitService.Object);
+        });
+
+        // ACT
+        var response = await client.GetAsync("/suits/999");
+
+        // ASSERT
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task CreateSuit_WithValidData_ReturnsCreatedAndSuit()
+    {
+        // ARRANGE
+        var mockSuitService = new Mock<ISuitService>();
+        var newSuitDto = new CreateSuitDTO("Clubs", '♣', 3);
+        var expectedSuit = new SuitDTO(3, "Clubs", '♣', 3);
+        mockSuitService
+            .Setup(s => s.CreateSuitAsync(It.IsAny<CreateSuitDTO>()))
+            .ReturnsAsync(expectedSuit);
+
+        var client = CreateTestClient(services =>
+        {
+            services.RemoveAll<ISuitService>();
+            services.AddSingleton(mockSuitService.Object);
+        });
+
+        // ACT
+        var response = await client.PostAsJsonAsync("/suits", newSuitDto);
+
+        // ASSERT
+        response.StatusCode.Should().Be(HttpStatusCode.Created);
+        response.Headers.Location.Should().Be("/suits/3");
+        var actualSuit = await response.Content.ReadFromJsonAsync<SuitDTO>(_jsonOptions);
+        actualSuit.Should().BeEquivalentTo(expectedSuit);
+    }
+
+    [Fact]
+    public async Task UpdateSuit_WhenSuitExists_ReturnsNoContent()
+    {
+        // ARRANGE
+        var mockSuitService = new Mock<ISuitService>();
+        var updateDto = new UpdateSuitDTO("Updated Spades", '♠', 4);
+        mockSuitService
+            .Setup(s => s.UpdateSuitAsync(1, It.IsAny<UpdateSuitDTO>()))
+            .ReturnsAsync(true);
+
+        var client = CreateTestClient(services =>
+        {
+            services.RemoveAll<ISuitService>();
+            services.AddSingleton(mockSuitService.Object);
+        });
+
+        // ACT
+        var response = await client.PutAsJsonAsync("/suits/1", updateDto);
+
+        // ASSERT
+        response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+    }
+
+    [Fact]
+    public async Task UpdateSuit_WhenSuitDoesNotExist_ReturnsNotFound()
+    {
+        // ARRANGE
+        var mockSuitService = new Mock<ISuitService>();
+        var updateDto = new UpdateSuitDTO("Does not exist", 'X', 0);
+        mockSuitService
+            .Setup(s => s.UpdateSuitAsync(999, It.IsAny<UpdateSuitDTO>()))
+            .ReturnsAsync(false);
+
+        var client = CreateTestClient(services =>
+        {
+            services.RemoveAll<ISuitService>();
+            services.AddSingleton(mockSuitService.Object);
+        });
+
+        // ACT
+        var response = await client.PutAsJsonAsync("/suits/999", updateDto);
+
+        // ASSERT
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task DeleteSuit_WhenSuitExists_ReturnsNoContent()
+    {
+        // ARRANGE
+        var mockSuitService = new Mock<ISuitService>();
+        mockSuitService.Setup(s => s.DeleteSuitAsync(1)).ReturnsAsync(true);
+
+        var client = CreateTestClient(services =>
+        {
+            services.RemoveAll<ISuitService>();
+            services.AddSingleton(mockSuitService.Object);
+        });
+
+        // ACT
+        var response = await client.DeleteAsync("/suits/1");
+
+        // ASSERT
+        response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+    }
+
+    [Fact]
+    public async Task DeleteSuit_WhenSuitDoesNotExist_ReturnsNotFound()
+    {
+        // ARRANGE
+        var mockSuitService = new Mock<ISuitService>();
+        mockSuitService.Setup(s => s.DeleteSuitAsync(999)).ReturnsAsync(false);
+
+        var client = CreateTestClient(services =>
+        {
+            services.RemoveAll<ISuitService>();
+            services.AddSingleton(mockSuitService.Object);
+        });
+
+        // ACT
+        var response = await client.DeleteAsync("/suits/999");
+
+        // ASSERT
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+}

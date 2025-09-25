@@ -5,9 +5,9 @@ namespace CardDeck.Api.Models;
 
 public class Suit
 {
-    public int Id { get; private set; }
+    public int Id { get; set; }
     public string Name { get; set; } = null!; // nvarchar(15)
-    public char Symbol { get; set; } // nchar(1)
+    public char Symbol { get; set; } // nchar(1) eg. ♠ ♥ ♣ ♦
     public int ColorRGB { get; set; } = 0; // default to black
 }
 
