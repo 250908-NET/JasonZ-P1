@@ -1,11 +1,9 @@
 using CardDeck.Api.Endpoints;
 using CardDeck.Api.Models;
-using CardDeck.Api.Models.DTOs;
 using CardDeck.Api.Repository;
 using CardDeck.Api.Services;
 using DotNetEnv;
 using FluentValidation;
-using FluentValidation.AspNetCore;
 using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
