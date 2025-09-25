@@ -4,6 +4,8 @@ using CardDeck.Api.Repository;
 using CardDeck.Api.Services;
 using DotNetEnv;
 using FluentValidation;
+using FluentValidation.AspNetCore;
+using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -33,6 +35,7 @@ builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddFluentValidationRulesToSwagger();
 
 builder.Services.AddScoped<ISuitRepository, SuitRepository>();
 
