@@ -1,17 +1,18 @@
 using System.Net;
 using System.Text.Json;
+using CardDeck.Api.Models;
+using CardDeck.Api.Models.DTOs;
+using CardDeck.Api.Services;
+using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
-using FluentAssertions;
-using CardDeck.Api.Services;
-using Microsoft.EntityFrameworkCore;
-using CardDeck.Api.Models;
-using Microsoft.Extensions.Configuration;
 
 namespace CardDeck.Test;
 
-public class StatusEndpointTests(WebApplicationFactory<Program> factory) : IClassFixture<WebApplicationFactory<Program>>
+public class StatusEndpointTests(WebApplicationFactory<Program> factory)
+    : IClassFixture<WebApplicationFactory<Program>>
 {
     private readonly WebApplicationFactory<Program> _factory = factory;
 
@@ -22,38 +23,40 @@ public class StatusEndpointTests(WebApplicationFactory<Program> factory) : IClas
 
         // mock IStatusService
         var mockStatusService = new Mock<IStatusService>();
-        var expectedStatus = new StatusResult(new Dictionary<string, bool>
-        {
-            { "Database", true },
-            { "ExternalApi", false }
-        });
-        mockStatusService
-            .Setup(s => s.CheckConnectionAsync())
-            .ReturnsAsync(expectedStatus);
+        var expectedStatus = new StatusDTO(
+            new Dictionary<string, bool> { { "Database", true }, { "ExternalApi", false } }
+        );
+        mockStatusService.Setup(s => s.CheckConnectionAsync()).ReturnsAsync(expectedStatus);
 
-        var client = _factory.WithWebHostBuilder(builder =>
-        {
-            builder.ConfigureServices(services =>
+        var client = _factory
+            .WithWebHostBuilder(builder =>
             {
-                // mock IStatusService
-                var statusServiceDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(IStatusService));
-                if (statusServiceDescriptor != null)
-                    services.Remove(statusServiceDescriptor);
-
-                services.AddSingleton(mockStatusService.Object);
-
-                // mock DbContext with in-memory database
-                var dbContextDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<CardDeckContext>));
-                if (dbContextDescriptor != null)
-                    services.Remove(dbContextDescriptor);
-
-                // ensure that no actual database connection is attempted
-                services.AddDbContext<CardDeckContext>(options =>
+                builder.ConfigureServices(services =>
                 {
-                    options.UseInMemoryDatabase("InMemoryTestDb");
+                    // mock IStatusService
+                    var statusServiceDescriptor = services.SingleOrDefault(d =>
+                        d.ServiceType == typeof(IStatusService)
+                    );
+                    if (statusServiceDescriptor != null)
+                        services.Remove(statusServiceDescriptor);
+
+                    services.AddSingleton(mockStatusService.Object);
+
+                    // mock DbContext with in-memory database
+                    var dbContextDescriptor = services.SingleOrDefault(d =>
+                        d.ServiceType == typeof(DbContextOptions<CardDeckContext>)
+                    );
+                    if (dbContextDescriptor != null)
+                        services.Remove(dbContextDescriptor);
+
+                    // ensure that no actual database connection is attempted
+                    services.AddDbContext<CardDeckContext>(options =>
+                    {
+                        options.UseInMemoryDatabase("InMemoryTestDb");
+                    });
                 });
-            });
-        }).CreateClient();
+            })
+            .CreateClient();
 
         // ACT
         var response = await client.GetAsync("/status");
@@ -65,7 +68,7 @@ public class StatusEndpointTests(WebApplicationFactory<Program> factory) : IClas
         var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
 
         // The API returns a StatusResult object with a `Status` property, e.g. { "status": { "Database": true, ... } }
-        var actualResult = JsonSerializer.Deserialize<StatusResult>(responseBody, options);
+        var actualResult = JsonSerializer.Deserialize<StatusDTO>(responseBody, options);
         var actualStatus = actualResult?.Status;
 
         actualStatus.Should().NotBeNull();
@@ -78,35 +81,37 @@ public class StatusEndpointTests(WebApplicationFactory<Program> factory) : IClas
     {
         // ARRANGE
         var mockStatusService = new Mock<IStatusService>();
-        var expectedStatus = new StatusResult(new Dictionary<string, bool>
-        {
-            { "Database", true },
-            { "ExternalApi", false }
-        });
-        mockStatusService
-            .Setup(s => s.CheckConnectionAsync())
-            .ReturnsAsync(expectedStatus);
+        var expectedStatus = new StatusDTO(
+            new Dictionary<string, bool> { { "Database", true }, { "ExternalApi", false } }
+        );
+        mockStatusService.Setup(s => s.CheckConnectionAsync()).ReturnsAsync(expectedStatus);
 
-        var client = _factory.WithWebHostBuilder(builder =>
-        {
-            builder.ConfigureServices(services =>
+        var client = _factory
+            .WithWebHostBuilder(builder =>
             {
-                var statusServiceDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(IStatusService));
-                if (statusServiceDescriptor != null)
-                    services.Remove(statusServiceDescriptor);
-
-                services.AddSingleton(mockStatusService.Object);
-
-                var dbContextDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<CardDeckContext>));
-                if (dbContextDescriptor != null)
-                    services.Remove(dbContextDescriptor);
-
-                services.AddDbContext<CardDeckContext>(options =>
+                builder.ConfigureServices(services =>
                 {
-                    options.UseInMemoryDatabase("InMemoryTestDb2");
+                    var statusServiceDescriptor = services.SingleOrDefault(d =>
+                        d.ServiceType == typeof(IStatusService)
+                    );
+                    if (statusServiceDescriptor != null)
+                        services.Remove(statusServiceDescriptor);
+
+                    services.AddSingleton(mockStatusService.Object);
+
+                    var dbContextDescriptor = services.SingleOrDefault(d =>
+                        d.ServiceType == typeof(DbContextOptions<CardDeckContext>)
+                    );
+                    if (dbContextDescriptor != null)
+                        services.Remove(dbContextDescriptor);
+
+                    services.AddDbContext<CardDeckContext>(options =>
+                    {
+                        options.UseInMemoryDatabase("InMemoryTestDb2");
+                    });
                 });
-            });
-        }).CreateClient();
+            })
+            .CreateClient();
 
         // ACT
         var response = await client.GetAsync("/status");
@@ -118,7 +123,9 @@ public class StatusEndpointTests(WebApplicationFactory<Program> factory) : IClas
         using var doc = JsonDocument.Parse(responseBody);
         var root = doc.RootElement;
 
-        root.TryGetProperty("status", out var statusElement).Should().BeTrue("response should include a root 'status' property");
+        root.TryGetProperty("status", out var statusElement)
+            .Should()
+            .BeTrue("response should include a root 'status' property");
         statusElement.ValueKind.Should().Be(JsonValueKind.Object);
 
         // confirm keys exist and values match mocked service

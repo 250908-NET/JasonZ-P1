@@ -1,4 +1,5 @@
 using CardDeck.Api.Models;
+using CardDeck.Api.Models.DTOs;
 
 namespace CardDeck.Api.Services;
 
@@ -8,7 +9,7 @@ public class StatusService(CardDeckContext dbContext, ILogger<StatusService> log
     private readonly CardDeckContext _dbContext = dbContext;
     private readonly ILogger<StatusService> _logger = logger;
 
-    public async Task<StatusResult> CheckConnectionAsync()
+    public async Task<StatusDTO> CheckConnectionAsync()
     {
         bool isConnected = false;
 
@@ -25,6 +26,6 @@ public class StatusService(CardDeckContext dbContext, ILogger<StatusService> log
             _logger.LogWarning(ex, "Database connection failed.");
         }
 
-        return new StatusResult(new Dictionary<string, bool> { { "Database", isConnected } });
+        return new StatusDTO(new Dictionary<string, bool> { { "Database", isConnected } });
     }
 }

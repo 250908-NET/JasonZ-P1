@@ -1,8 +1,8 @@
-namespace CardDeck.Api.Services;
+using CardDeck.Api.Models.DTOs;
 
-public record StatusResult(Dictionary<string, bool> Status);
+namespace CardDeck.Api.Services;
 
 public interface IStatusService
 {
-    public Task<StatusResult> CheckConnectionAsync();
+    public Task<StatusDTO> CheckConnectionAsync();
 }
