@@ -17,18 +17,26 @@ public class Game
         Id = Guid.CreateVersion7();
     }
 
+    public Game(Guid id)
+    {
+        Id = id;
+    }
+
     public Guid Id { get; private set; } // uniqueidentifier, uuidv7
 
     // --- session-level data ---
     public decimal Target { get; set; } = 21.0m; // decimal(18), default to 21.0
-    public int DrawLimit { get; set; } = 5; // int, default to 5
+    public int OverdrawLimit { get; set; } = 5; // int, default to 5
     public decimal Money { get; set; } = 1000.0m; // decimal(18,2), default to 1000.0
     public DateTimeOffset CreatedAt { get; set; } // datetimeoffset
+
+    public List<GameCard> GameCards { get; set; } = []; // navigation property
 
     // -- round-level data ---
     public int Round { get; set; } = 0; // int, default to 0
     public decimal Bet { get; set; } = 0.0m; // decimal(18,2), default to 0.0
     public GameStatus Status { get; set; } = GameStatus.DealingToPlayer; // tinyint: 0 -> dealing to player, 1 -> dealing to dealer, 2 -> round end
+    public int OverdrawsRemaining { get; set; } = 0;
     public DateTimeOffset UpdatedAt { get; set; } // datetimeoffset
     public byte[] RowVersion { get; set; } = []; // rowversion/timestamp for concurrency
 }
@@ -43,7 +51,7 @@ public class GameConfiguration : IEntityTypeConfiguration<Game>
 
         builder.Property(g => g.Target).HasPrecision(18, 2).HasDefaultValue(21.0m);
 
-        builder.Property(g => g.DrawLimit).HasDefaultValue(5);
+        builder.Property(g => g.OverdrawLimit).HasDefaultValue(5);
 
         builder.Property(g => g.Money).HasPrecision(18, 2).HasDefaultValue(1000.0m);
 

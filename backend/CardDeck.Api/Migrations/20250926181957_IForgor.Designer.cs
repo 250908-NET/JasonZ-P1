@@ -4,6 +4,7 @@ using CardDeck.Api.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CardDeck.Api.Migrations
 {
     [DbContext(typeof(CardDeckContext))]
-    partial class CardDeckContextModelSnapshot : ModelSnapshot
+    [Migration("20250926181957_IForgor")]
+    partial class IForgor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -173,6 +176,9 @@ namespace CardDeck.Api.Migrations
                     b.Property<Guid>("GameId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("GameId1")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<byte>("OwnerType")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("tinyint")
@@ -183,6 +189,8 @@ namespace CardDeck.Api.Migrations
                     b.HasIndex("CardId");
 
                     b.HasIndex("GameId");
+
+                    b.HasIndex("GameId1");
 
                     b.ToTable("GameCards", (string)null);
                 });
@@ -254,10 +262,14 @@ namespace CardDeck.Api.Migrations
                         .IsRequired();
 
                     b.HasOne("CardDeck.Api.Models.Game", "Game")
-                        .WithMany("GameCards")
+                        .WithMany()
                         .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("CardDeck.Api.Models.Game", null)
+                        .WithMany("GameCards")
+                        .HasForeignKey("GameId1");
 
                     b.Navigation("Card");
 

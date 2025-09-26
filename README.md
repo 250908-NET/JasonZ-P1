@@ -36,9 +36,9 @@ Due: 2025-09-26
 
 ### Blackjack
 
-- [ ] POST /blackjack: start blackjack game
-- [ ] GET /blackjack/{gameId}: return current state of game
-- [ ] POST /blackjack/{gameId}/{action}: execute bet/hit/stand 
+- [X] POST /blackjack: start blackjack game
+- [X] GET /blackjack/{gameId}: return current state of game
+- [X] POST /blackjack/{gameId}/{action}: execute bet/hit/stand 
 
 ## Requirements
 
@@ -46,7 +46,8 @@ Due: 2025-09-26
 - [X] README that describes the application and its functionalities
 - [X] The application should be ASP.NET Core Minimal API application
 - [X] The application should build and run
-- [ ] The application should have unit tests and at least 20% coverage
+- [X] The application should have unit tests and at least 20% coverage
+    - Now with 51% line coverage and 37% branch coverage!
 - [X] The application should communicate via HTTP(s) (Must have POST, GET, DELETE)
 - [X] Have 1 or more DTOs
 - [X] ERD of your models and the relationships between them

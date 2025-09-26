@@ -5,11 +5,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CardDeck.Api.Models;
 
-public record CardEffect(string Operation, decimal Value);
-
 public class Card
 {
-    public int Id { get; private set; }
+    public int Id { get; set; }
     public string Rank { get; set; } = null!; // nvarchar(5)
     public int SuitId { get; set; } // foreign key to Suit
     public Suit Suit { get; set; } = null!; // navigation property?

@@ -40,14 +40,15 @@ Table Games {
   
   // --- session-level data ---
   Target decimal(18) [default: 21.0]
-  DrawLimit integer [default: 5]
+  OverdrawLimit integer [default: 5]
   Money decimal(18,2) [default: 1000.0]
   CreatedAt datetimeoffset [default: `SYSDATETIMEOFFSET()`]
 
   // --- round-level data ---
   Round integer [default: 0]
   Bet decimal(18,2) [default: 0.0]
-  Status tinyint [default: 0] // 0 -> dealing to player, 1 -> dealing to dealer, 2 -> round end
+  Status tinyint [default: 0] // 0 -> dealing to player, 1 -> dealing to dealer, 2 -> round end'
+  OverdrawsRemaining integer [default: 5]
   UpdatedAt datetimeoffset [default: `SYSDATETIMEOFFSET()`]
   RowVersion rowversion [not null] // for optimistic concurrency control
 }

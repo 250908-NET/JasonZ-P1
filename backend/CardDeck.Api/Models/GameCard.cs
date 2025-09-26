@@ -38,7 +38,7 @@ public class GameCardConfiguration : IEntityTypeConfiguration<GameCard>
         builder.Property(gc => gc.GameId).IsRequired();
         builder
             .HasOne(gc => gc.Game)
-            .WithMany()
+            .WithMany(g => g.GameCards)
             .HasForeignKey(gc => gc.GameId)
             .OnDelete(DeleteBehavior.Cascade);
         builder.HasIndex(gc => gc.GameId).IsUnique(false);

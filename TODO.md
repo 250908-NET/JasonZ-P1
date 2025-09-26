@@ -11,11 +11,11 @@
     - [X] efcore setup with database
     - [X] /status endpoint
     - [X] plan endpoints
-    - [ ] finish endpoints (see README for granular progress)
+    - [X] finish endpoints (see README for granular progress)
         - [X] suits
         - [X] cards
         - [X] deck
-        - [ ] blackjack
+        - [X] blackjack
     - [ ] make the endpoints good
         - [X] unit tests babey
         - [X] separate endpoint files

@@ -47,11 +47,13 @@ builder.Services.AddFluentValidationRulesToSwagger();
 builder.Services.AddScoped<ISuitRepository, SuitRepository>();
 builder.Services.AddScoped<ICardRepository, CardRepository>();
 builder.Services.AddScoped<IAvailableCardRepository, AvailableCardRepository>();
+builder.Services.AddScoped<IGameRepository, GameRepository>();
 
 builder.Services.AddScoped<IStatusService, StatusService>();
 builder.Services.AddScoped<ISuitService, SuitService>();
 builder.Services.AddScoped<ICardService, CardService>();
 builder.Services.AddScoped<IAvailableCardService, AvailableCardService>();
+builder.Services.AddScoped<IBlackjackService, BlackjackService>();
 
 // configure logger
 Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(builder.Configuration).CreateLogger(); // read from appsettings.json
@@ -76,6 +78,7 @@ app.MapStatusEndpoints();
 app.MapSuitEndpoints();
 app.MapCardEndpoints();
 app.MapDeckEndpoints();
+app.MapBlackjackEndpoints();
 
 // disable start message when in testing environment
 if (!app.Environment.IsEnvironment("Testing"))

@@ -45,7 +45,7 @@ public class CreateCardDTOValidator : AbstractValidator<CreateCardDTO>
         RuleFor(c => c.Effects)
             .NotEmpty()
             .WithMessage("Effects list cannot be empty if provided.")
-            .Must(e => e!.All(effect => !string.IsNullOrWhiteSpace(effect.Operation)))
+            .Must(e => e!.All(effect => !string.IsNullOrWhiteSpace(effect.Operation.ToString())))
             .WithMessage("Each effect must have a valid operation.")
             .When(c => c.Effects != null); // avoid null ref
     }
@@ -68,7 +68,7 @@ public class UpdateCardDTOValidator : AbstractValidator<UpdateCardDTO>
         RuleFor(c => c.Effects)
             .NotEmpty()
             .WithMessage("Effects list cannot be empty if provided.")
-            .Must(e => e!.All(effect => !string.IsNullOrWhiteSpace(effect.Operation)))
+            .Must(e => e!.All(effect => !string.IsNullOrWhiteSpace(effect.Operation.ToString())))
             .WithMessage("Each effect must have a valid operation.")
             .When(c => c.Effects != null); // avoid null ref
     }
@@ -93,7 +93,7 @@ public class PartialUpdateCardDTOValidator : AbstractValidator<PartialUpdateCard
         RuleFor(c => c.Effects)
             .NotEmpty()
             .WithMessage("Effects list cannot be empty if provided.")
-            .Must(e => e!.All(effect => !string.IsNullOrWhiteSpace(effect.Operation)))
+            .Must(e => e!.All(effect => !string.IsNullOrWhiteSpace(effect.Operation.ToString())))
             .WithMessage("Each effect must have a valid operation.")
             .When(c => c.Effects != null); // avoid null ref
     }
