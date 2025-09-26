@@ -10,7 +10,10 @@ public class AvailableCardRepository(CardDeckContext context) : IAvailableCardRe
 
     public async Task<List<AvailableCard>> GetAllAvailableCardsAsync()
     {
-        return await _context.AvailableCards.ToListAsync();
+        return await _context
+            .AvailableCards.Include(ac => ac.Card)
+            .ThenInclude(c => c.Suit)
+            .ToListAsync();
     }
 
     public async Task<AvailableCard?> GetAvailableCardByIdAsync(int availableCardId)

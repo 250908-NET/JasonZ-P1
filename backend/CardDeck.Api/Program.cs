@@ -55,6 +55,15 @@ builder.Services.AddScoped<ICardService, CardService>();
 builder.Services.AddScoped<IAvailableCardService, AvailableCardService>();
 builder.Services.AddScoped<IBlackjackService, BlackjackService>();
 
+// configure JSON serialization
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.Converters.Add(
+        new System.Text.Json.Serialization.JsonStringEnumConverter()
+    );
+    options.SerializerOptions.PropertyNameCaseInsensitive = true;
+});
+
 // configure logger
 Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(builder.Configuration).CreateLogger(); // read from appsettings.json
 builder.Host.UseSerilog();

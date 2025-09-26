@@ -16,7 +16,7 @@
         - [X] cards
         - [X] deck
         - [X] blackjack
-    - [X] make the endpoints good
+    - [ ] make the endpoints good
         - [X] unit tests babey
         - [X] separate endpoint files
         - [X] make update operations atomic
@@ -24,6 +24,7 @@
             - [X] make functions throw exceptions instead of false lol
             - [X] update integration test mocks to match
         - [X] output suit color values as hex codes
+        - [ ] validate cardeffect on card creation
 - [ ] do frontend
     - [ ] ...or not.
 - [ ] profit

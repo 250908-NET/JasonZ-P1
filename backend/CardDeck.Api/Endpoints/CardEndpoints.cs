@@ -1,6 +1,7 @@
 using CardDeck.Api.Models.DTOs;
 using CardDeck.Api.Services;
 using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 using SharpGrip.FluentValidation.AutoValidation.Endpoints.Extensions;
 
 namespace CardDeck.Api.Endpoints;
@@ -49,6 +50,7 @@ public static class CardEndpoints
                 "/",
                 async (CreateCardDTO newCard, ICardService service) =>
                 {
+                    Console.WriteLine(newCard.Effects.ToArray());
                     var createdCard = await service.CreateCardAsync(newCard);
                     return Results.Created($"{prefix}/{createdCard.Id}", createdCard);
                 }

@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace CardDeck.Api.Models;
 
-[JsonConverter(typeof(JsonStringEnumConverter))]
+// [JsonConverter(typeof(JsonStringEnumConverter))]
 public enum EffectOperation
 {
     [EnumMember(Value = "+")]

@@ -67,7 +67,10 @@ public class GameConfiguration : IEntityTypeConfiguration<Game>
             .HasConversion<byte>()
             .HasDefaultValue(GameStatus.DealingToPlayer);
 
-        builder.Property(g => g.UpdatedAt).ValueGeneratedOnAddOrUpdate();
+        builder
+            .Property(g => g.UpdatedAt)
+            .HasDefaultValueSql("SYSDATETIMEOFFSET()")
+            .ValueGeneratedOnAddOrUpdate();
 
         builder.Property(g => g.RowVersion).IsRowVersion().IsConcurrencyToken();
     }
