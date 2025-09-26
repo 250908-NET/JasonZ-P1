@@ -23,6 +23,7 @@
         - [X] global error handler
             - [X] make functions throw exceptions instead of false lol
             - [X] update integration test mocks to match
+        - [ ] output suit color values as hex codes
 - [ ] do frontend
     - [ ] ...or not.
 - [ ] profit
