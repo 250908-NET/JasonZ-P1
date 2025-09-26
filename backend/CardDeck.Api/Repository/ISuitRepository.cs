@@ -1,5 +1,4 @@
 using CardDeck.Api.Models;
-using CardDeck.Api.Models.DTOs;
 
 namespace CardDeck.Api.Repository;
 
