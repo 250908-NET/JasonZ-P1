@@ -47,6 +47,14 @@ public record ApiExceptionResponse
             Errors = ex.Errors,
         };
 
+    public static implicit operator ApiExceptionResponse(BadRequestException ex) =>
+        new()
+        {
+            Title = "Bad Request",
+            Status = (int)ex.StatusCode,
+            Detail = ex.Message,
+        };
+
     /// <summary>
     /// Implicitly converts a NotFoundException into a standardized ApiError response.
     /// </summary>

@@ -14,7 +14,7 @@
     - [ ] finish endpoints (see README for granular progress)
         - [X] suits
         - [X] cards
-        - [ ] deck
+        - [X] deck
         - [ ] blackjack
     - [ ] make the endpoints good
         - [X] unit tests babey

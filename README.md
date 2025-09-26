@@ -29,9 +29,10 @@ Due: 2025-09-26
 
 ### Deck
 
-- [ ] GET /deck: get all cards in global deck (maybe paginate lol)
-- [ ] POST /deck: insert card into global deck
-- [ ] POST /deck/draw: draw one card randomly from the deck
+- [X] GET /deck: get all cards in global deck (maybe paginate lol)
+- [X] POST /deck: insert card into global deck
+- [X] POST /deck/draw: draw one card randomly from the deck
+- [X] POST /deck/draw/{numberOfCards}: draw an arbitrary number of cards randomly from the deck
 
 ### Blackjack
 

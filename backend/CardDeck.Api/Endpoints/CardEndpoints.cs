@@ -1,7 +1,6 @@
 using CardDeck.Api.Models.DTOs;
 using CardDeck.Api.Services;
 using FluentValidation;
-using FluentValidation.Results;
 using SharpGrip.FluentValidation.AutoValidation.Endpoints.Extensions;
 
 namespace CardDeck.Api.Endpoints;
