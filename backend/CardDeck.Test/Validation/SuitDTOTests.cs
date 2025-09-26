@@ -90,7 +90,7 @@ public class SuitDtoValidatorTests
     [Fact]
     public void PartialUpdateValidator_WhenNameIsEmpty_ShouldHaveValidationError()
     {
-        var model = new PartialUpdateSuitDTO("", null, null);
+        var model = new PartialUpdateSuitDTO("", null, (string?)null);
         var result = _partialUpdateValidator.TestValidate(model);
         result
             .ShouldHaveValidationErrorFor(x => x.Name)
@@ -101,7 +101,7 @@ public class SuitDtoValidatorTests
     public void PartialUpdateValidator_WhenNameIsTooLong_ShouldHaveValidationError()
     {
         var longName = new string('a', 33);
-        var model = new PartialUpdateSuitDTO(longName, null, null);
+        var model = new PartialUpdateSuitDTO(longName, null, (string?)null);
         var result = _partialUpdateValidator.TestValidate(model);
         result
             .ShouldHaveValidationErrorFor(x => x.Name)
@@ -111,18 +111,39 @@ public class SuitDtoValidatorTests
     [Fact]
     public void PartialUpdateValidator_WhenNameIsValid_ShouldNotHaveValidationError()
     {
-        var model = new PartialUpdateSuitDTO("Spades", null, null);
+        var model = new PartialUpdateSuitDTO("Spades", null, (string?)null);
         var result = _partialUpdateValidator.TestValidate(model);
         result.ShouldNotHaveValidationErrorFor(x => x.Name);
     }
 
-    [Fact]
-    public void PartialUpdateValidator_WhenColorRGBIsOutOfRange_ShouldHaveValidationError()
+    [Theory]
+    [InlineData("invalid")]
+    [InlineData("#12345")]
+    [InlineData("123456")]
+    [InlineData("#GHIJKL")]
+    public void PartialUpdateValidator_WhenColorHexIsInvalid_ShouldHaveValidationError(
+        string invalidHex
+    )
     {
-        var model = new PartialUpdateSuitDTO(null, null, 20000000);
+        var model = new PartialUpdateSuitDTO(null, null, invalidHex);
         var result = _partialUpdateValidator.TestValidate(model);
         result
-            .ShouldHaveValidationErrorFor(x => x.ColorRGB)
-            .WithErrorMessage("ColorRGB must be between 0x000000 and 0xFFFFFF if provided.");
+            .ShouldHaveValidationErrorFor(x => x.ColorHex)
+            .WithErrorMessage(
+                "ColorHex must be a valid 6-digit hex color code (e.g., #RRGGBB) if provided."
+            );
+    }
+
+    [Theory]
+    [InlineData("#000000")]
+    [InlineData("#FFFFFF")]
+    [InlineData("#ff00aa")]
+    public void PartialUpdateValidator_WhenColorHexIsValid_ShouldNotHaveValidationError(
+        string validHex
+    )
+    {
+        var model = new PartialUpdateSuitDTO(null, null, validHex);
+        var result = _partialUpdateValidator.TestValidate(model);
+        result.ShouldNotHaveValidationErrorFor(x => x.ColorHex);
     }
 }

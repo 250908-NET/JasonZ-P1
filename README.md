@@ -47,7 +47,7 @@ Due: 2025-09-26
 - [X] The application should be ASP.NET Core Minimal API application
 - [X] The application should build and run
 - [X] The application should have unit tests and at least 20% coverage
-    - Now with 51% line coverage and 37% branch coverage!
+    - Now with 24% line coverage and 35% branch coverage!
 - [X] The application should communicate via HTTP(s) (Must have POST, GET, DELETE)
 - [X] Have 1 or more DTOs
 - [X] ERD of your models and the relationships between them

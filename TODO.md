@@ -5,7 +5,7 @@
     - [X] create ERD or something
     - [X] don't forget at least one many-to-many relationship!
     - [ ] docker compose.yml
-- [ ] do backend
+- [X] do backend
     - [X] api scaffolding
     - [X] xunit test setup
     - [X] efcore setup with database
@@ -16,14 +16,14 @@
         - [X] cards
         - [X] deck
         - [X] blackjack
-    - [ ] make the endpoints good
+    - [X] make the endpoints good
         - [X] unit tests babey
         - [X] separate endpoint files
         - [X] make update operations atomic
         - [X] global error handler
             - [X] make functions throw exceptions instead of false lol
             - [X] update integration test mocks to match
-        - [ ] output suit color values as hex codes
+        - [X] output suit color values as hex codes
 - [ ] do frontend
     - [ ] ...or not.
 - [ ] profit

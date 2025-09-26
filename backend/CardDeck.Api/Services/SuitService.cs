@@ -35,7 +35,7 @@ public class SuitService(ISuitRepository suitRepository, ILogger<SuitService> lo
         {
             Name = newSuit.Name,
             Symbol = newSuit.Symbol,
-            ColorRGB = newSuit.ColorRGB,
+            ColorRGB = newSuit.ToRgb(),
         };
         var createdSuit = await _suitRepository.CreateSuitAsync(suit);
 
@@ -63,7 +63,7 @@ public class SuitService(ISuitRepository suitRepository, ILogger<SuitService> lo
         // if found apply changes
         existingSuit.Name = updateSuit.Name;
         existingSuit.Symbol = updateSuit.Symbol;
-        existingSuit.ColorRGB = updateSuit.ColorRGB;
+        existingSuit.ColorRGB = updateSuit.ToRgb();
 
         await _suitRepository.UpdateSuitAsync(existingSuit);
         _logger.LogInformation("Successfully updated suit with ID {SuitId}!", suitId);
@@ -82,8 +82,8 @@ public class SuitService(ISuitRepository suitRepository, ILogger<SuitService> lo
             existingSuit.Name = partialSuit.Name;
         if (partialSuit.Symbol != null)
             existingSuit.Symbol = partialSuit.Symbol.Value;
-        if (partialSuit.ColorRGB != null)
-            existingSuit.ColorRGB = partialSuit.ColorRGB.Value;
+        if (partialSuit.ToRgb() != null)
+            existingSuit.ColorRGB = partialSuit.ToRgb()!.Value;
 
         await _suitRepository.UpdateSuitAsync(existingSuit);
         _logger.LogInformation("Successfully patched suit with ID {SuitId}!", suitId);
