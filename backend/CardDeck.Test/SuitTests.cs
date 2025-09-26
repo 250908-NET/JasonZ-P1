@@ -161,6 +161,38 @@ public class SuitTests(WebApplicationFactory<Program> factory) : IntegrationTest
     }
 
     [Fact]
+    public async Task UpdateSuit_WhenConcurrencyConflictOccurs_ReturnsConflict()
+    {
+        // ARRANGE
+        var mockSuitService = new Mock<ISuitService>();
+        var updateDto = new UpdateSuitDTO("Updated Spades", '♠', 4);
+        var expectedErrorMessage =
+            "The suit you are trying to update has been modified by another user. Please refresh and try again.";
+
+        mockSuitService
+            .Setup(s => s.UpdateSuitAsync(1, It.IsAny<UpdateSuitDTO>()))
+            .ThrowsAsync(new ConflictException(expectedErrorMessage));
+
+        var client = CreateTestClient(services =>
+        {
+            services.RemoveAll<ISuitService>();
+            services.AddSingleton(mockSuitService.Object);
+        });
+
+        // ACT
+        var response = await client.PutAsJsonAsync("/suits/1", updateDto);
+
+        // ASSERT
+        response.StatusCode.Should().Be(HttpStatusCode.Conflict);
+
+        var error = await response.Content.ReadFromJsonAsync<ApiExceptionResponse>(_jsonOptions);
+        error.Should().NotBeNull();
+        error!.Status.Should().Be((int)HttpStatusCode.Conflict);
+        error.Title.Should().Be("Conflict");
+        error.Detail.Should().Be(expectedErrorMessage);
+    }
+
+    [Fact]
     public async Task PartialUpdateSuit_WhenSuitExists_ReturnsNoContent()
     {
         // ARRANGE

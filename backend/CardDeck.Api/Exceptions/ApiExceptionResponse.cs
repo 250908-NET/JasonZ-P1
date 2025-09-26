@@ -59,6 +59,17 @@ public record ApiExceptionResponse
         };
 
     /// <summary>
+    /// Implicitly converts a ConflictException into a standardized ApiError response.
+    /// </summary>
+    public static implicit operator ApiExceptionResponse(ConflictException ex) =>
+        new()
+        {
+            Title = "Conflict",
+            Status = (int)ex.StatusCode,
+            Detail = ex.Message,
+        };
+
+    /// <summary>
     /// Provides a general fallback conversion for any other ApiException.
     /// </summary>
     public static implicit operator ApiExceptionResponse(ApiException ex) =>

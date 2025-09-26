@@ -36,6 +36,8 @@ public class GlobalExceptionHandlerMiddleware(
         {
             ValidationException ex => ex,
             NotFoundException ex => ex,
+            ConflictException ex => ex,
+
             ApiException ex => ex,
             _ => new ApiExceptionResponse
             {
