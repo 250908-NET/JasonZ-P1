@@ -11,6 +11,9 @@ public record CreateSuitDTO(string Name, char Symbol, int ColorRGB);
 // input DTO for updating an existing suit
 public record UpdateSuitDTO(string Name, char Symbol, int ColorRGB);
 
+// input DTO for updating part of an existing suit
+public record PartialUpdateSuitDTO(string? Name, char? Symbol, int? ColorRGB);
+
 // --- validators ---
 
 public class CreateSuitDTOValidator : AbstractValidator<CreateSuitDTO>
@@ -46,5 +49,28 @@ public class UpdateSuitDTOValidator : AbstractValidator<UpdateSuitDTO>
         RuleFor(s => s.ColorRGB)
             .InclusiveBetween(0, 16777215)
             .WithMessage("ColorRGB must be between 0 and 16777215.");
+    }
+}
+
+public class PartialUpdateSuitDTOValidator : AbstractValidator<PartialUpdateSuitDTO>
+{
+    public PartialUpdateSuitDTOValidator()
+    {
+        RuleFor(s => s.Name)
+            .NotEmpty()
+            .WithMessage("Suit name cannot be empty if provided.")
+            .MaximumLength(15)
+            .WithMessage("Suit name cannot exceed 15 characters if provided.")
+            .When(s => s.Name != null);
+
+        RuleFor(s => s.Symbol)
+            .NotEmpty()
+            .WithMessage("Symbol cannot be empty if provided.")
+            .When(s => s.Symbol != null);
+
+        RuleFor(s => s.ColorRGB)
+            .InclusiveBetween(0, 16777215)
+            .WithMessage("ColorRGB must be between 0 and 16777215 if provided.")
+            .When(s => s.ColorRGB != null);
     }
 }

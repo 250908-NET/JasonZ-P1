@@ -15,6 +15,7 @@ Due: 2025-09-26
 - [X] GET /suits/{suitId}: get specific suit
 - [X] POST /suits: create new suit
 - [X] PUT /suits/{suitId}: update existing suit
+- [X] PATCH /suits/{suitId}: update existing suit (partial)
 - [X] DELETE /suits/{suitId}: delete existing suit
 
 ### Cards
@@ -23,6 +24,7 @@ Due: 2025-09-26
 - [ ] GET /cards/{cardId}: get specific card type
 - [ ] POST /cards: create new card type
 - [ ] PUT /cards/{cardId}: update existing card type
+- [ ] PATCH /cards/{cardId}: update existing card type (partial)
 - [ ] DELETE /cards/{cardId}: delete existing card type
 
 ### Deck

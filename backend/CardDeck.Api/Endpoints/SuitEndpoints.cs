@@ -73,6 +73,21 @@ public static class SuitEndpoints
             .WithOpenApi();
 
         group
+            .MapPatch(
+                "/{suitId:int}",
+                async (int suitId, PartialUpdateSuitDTO partialSuit, ISuitService service) =>
+                {
+                    var success = await service.PartialUpdateSuitAsync(suitId, partialSuit);
+                    return success ? Results.NoContent() : Results.NotFound();
+                }
+            )
+            .WithName("PatchSuit")
+            .Produces(StatusCodes.Status204NoContent)
+            .Produces(StatusCodes.Status404NotFound)
+            .ProducesValidationProblem() // for 400 validation errors
+            .WithOpenApi();
+
+        group
             .MapDelete(
                 "/{suitId:int}",
                 async (int suitId, ISuitService service) =>

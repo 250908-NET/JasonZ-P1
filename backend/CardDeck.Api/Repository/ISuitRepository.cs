@@ -1,4 +1,5 @@
 using CardDeck.Api.Models;
+using CardDeck.Api.Models.DTOs;
 
 namespace CardDeck.Api.Repository;
 
@@ -8,5 +9,5 @@ public interface ISuitRepository
     Task<Suit?> GetSuitByIdAsync(int suitId);
     Task<Suit> CreateSuitAsync(Suit newSuit);
     Task<bool> UpdateSuitAsync(Suit updateSuit);
-    Task<bool> DeleteSuitAsync(int suitId);
+    Task<bool> DeleteSuitAsync(Suit suit);
 }

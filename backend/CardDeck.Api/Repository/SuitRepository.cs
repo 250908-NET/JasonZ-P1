@@ -26,29 +26,12 @@ public class SuitRepository(CardDeckContext context) : ISuitRepository
 
     public async Task<bool> UpdateSuitAsync(Suit updateSuit)
     {
-        var existingSuit = await _context.Suits.FindAsync(updateSuit.Id);
-        if (existingSuit == null)
-        {
-            return false;
-        }
-
-        existingSuit.Name = updateSuit.Name;
-        existingSuit.Symbol = updateSuit.Symbol;
-        existingSuit.ColorRGB = updateSuit.ColorRGB;
-
-        await _context.SaveChangesAsync();
-        return true;
+        _context.Entry(updateSuit).State = EntityState.Modified;
+        return await _context.SaveChangesAsync() > 0;
     }
 
-    public async Task<bool> DeleteSuitAsync(int suitId)
+    public async Task<bool> DeleteSuitAsync(Suit suit)
     {
-        // return false if suit not found
-        var suit = await _context.Suits.FindAsync(suitId);
-        if (suit == null)
-        {
-            return false;
-        }
-
         _context.Suits.Remove(suit);
         return await _context.SaveChangesAsync() > 0;
     }
