@@ -11,7 +11,16 @@
     - [X] efcore setup with database
     - [X] /status endpoint
     - [X] plan endpoints
-    - [ ] finish endpoints (see README for progress)
+    - [ ] finish endpoints (see README for granular progress)
+        - [ ] suits
+        - [ ] cards
+        - [ ] deck
+        - [ ] blackjack
+    - [ ] make the endpoints good
+        - [X] unit tests babey
+        - [X] separate endpoint files
+        - [ ] make update operations atomic
+        - [ ] global error handler
 - [ ] do frontend
     - [ ] ...or not.
 - [ ] profit
