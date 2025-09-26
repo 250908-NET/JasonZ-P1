@@ -1,4 +1,5 @@
 using CardDeck.Api.Endpoints;
+using CardDeck.Api.Middleware;
 using CardDeck.Api.Models;
 using CardDeck.Api.Repository;
 using CardDeck.Api.Services;
@@ -46,6 +47,8 @@ Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(builder.Configurat
 builder.Host.UseSerilog();
 
 var app = builder.Build();
+
+app.UseGlobalExceptionHandler();
 
 // configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

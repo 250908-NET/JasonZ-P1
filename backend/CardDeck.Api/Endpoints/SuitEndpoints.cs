@@ -34,8 +34,7 @@ public static class SuitEndpoints
                 "/{suitId:int}",
                 async (int suitId, ISuitService service) =>
                 {
-                    var suit = await service.GetSuitByIdAsync(suitId);
-                    return suit == null ? Results.NotFound() : Results.Ok(suit);
+                    return Results.Ok(await service.GetSuitByIdAsync(suitId));
                 }
             )
             .WithName("GetSuitById")
@@ -62,8 +61,8 @@ public static class SuitEndpoints
                 "/{suitId:int}",
                 async (int suitId, UpdateSuitDTO updateSuit, ISuitService service) =>
                 {
-                    var success = await service.UpdateSuitAsync(suitId, updateSuit);
-                    return success ? Results.NoContent() : Results.NotFound();
+                    await service.UpdateSuitAsync(suitId, updateSuit);
+                    return Results.NoContent();
                 }
             )
             .WithName("UpdateSuit")
@@ -77,8 +76,8 @@ public static class SuitEndpoints
                 "/{suitId:int}",
                 async (int suitId, PartialUpdateSuitDTO partialSuit, ISuitService service) =>
                 {
-                    var success = await service.PartialUpdateSuitAsync(suitId, partialSuit);
-                    return success ? Results.NoContent() : Results.NotFound();
+                    await service.PartialUpdateSuitAsync(suitId, partialSuit);
+                    return Results.NoContent();
                 }
             )
             .WithName("PatchSuit")
@@ -92,8 +91,8 @@ public static class SuitEndpoints
                 "/{suitId:int}",
                 async (int suitId, ISuitService service) =>
                 {
-                    var success = await service.DeleteSuitAsync(suitId);
-                    return success ? Results.NoContent() : Results.NotFound();
+                    await service.DeleteSuitAsync(suitId);
+                    return Results.NoContent();
                 }
             )
             .WithName("DeleteSuit")

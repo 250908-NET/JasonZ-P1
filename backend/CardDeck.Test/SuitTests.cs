@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using CardDeck.Api.Exceptions;
 using CardDeck.Api.Models.DTOs;
 using CardDeck.Api.Services;
 using FluentAssertions;
@@ -67,9 +68,10 @@ public class SuitTests(WebApplicationFactory<Program> factory) : IntegrationTest
     {
         // ARRANGE
         var mockSuitService = new Mock<ISuitService>();
+        var expectedErrorMessage = "Suit with ID 999 was not found.";
         mockSuitService
             .Setup(s => s.GetSuitByIdAsync(It.IsAny<int>()))
-            .ReturnsAsync((SuitDTO?)null);
+            .ThrowsAsync(new NotFoundException(expectedErrorMessage));
 
         var client = CreateTestClient(services =>
         {
@@ -119,7 +121,7 @@ public class SuitTests(WebApplicationFactory<Program> factory) : IntegrationTest
         var updateDto = new UpdateSuitDTO("Updated Spades", '♠', 4);
         mockSuitService
             .Setup(s => s.UpdateSuitAsync(1, It.IsAny<UpdateSuitDTO>()))
-            .ReturnsAsync(true);
+            .Returns(Task.CompletedTask);
 
         var client = CreateTestClient(services =>
         {
@@ -140,9 +142,10 @@ public class SuitTests(WebApplicationFactory<Program> factory) : IntegrationTest
         // ARRANGE
         var mockSuitService = new Mock<ISuitService>();
         var updateDto = new UpdateSuitDTO("Does not exist", 'X', 0);
+        var expectedErrorMessage = "Suit with ID 999 not found for update.";
         mockSuitService
             .Setup(s => s.UpdateSuitAsync(999, It.IsAny<UpdateSuitDTO>()))
-            .ReturnsAsync(false);
+            .ThrowsAsync(new NotFoundException(expectedErrorMessage));
 
         var client = CreateTestClient(services =>
         {
@@ -162,7 +165,7 @@ public class SuitTests(WebApplicationFactory<Program> factory) : IntegrationTest
     {
         // ARRANGE
         var mockSuitService = new Mock<ISuitService>();
-        mockSuitService.Setup(s => s.DeleteSuitAsync(1)).ReturnsAsync(true);
+        mockSuitService.Setup(s => s.DeleteSuitAsync(1)).Returns(Task.CompletedTask);
 
         var client = CreateTestClient(services =>
         {
@@ -182,7 +185,10 @@ public class SuitTests(WebApplicationFactory<Program> factory) : IntegrationTest
     {
         // ARRANGE
         var mockSuitService = new Mock<ISuitService>();
-        mockSuitService.Setup(s => s.DeleteSuitAsync(999)).ReturnsAsync(false);
+        var expectedErrorMessage = "Suit with ID 999 not found for deletion.";
+        mockSuitService
+            .Setup(s => s.DeleteSuitAsync(999))
+            .ThrowsAsync(new NotFoundException(expectedErrorMessage));
 
         var client = CreateTestClient(services =>
         {

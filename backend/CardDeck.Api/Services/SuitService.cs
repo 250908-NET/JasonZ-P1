@@ -1,3 +1,4 @@
+using CardDeck.Api.Exceptions;
 using CardDeck.Api.Models;
 using CardDeck.Api.Models.DTOs;
 using CardDeck.Api.Repository;
@@ -20,14 +21,9 @@ public class SuitService(ISuitRepository suitRepository, ILogger<SuitService> lo
     public async Task<SuitDTO?> GetSuitByIdAsync(int suitId)
     {
         _logger.LogInformation("Fetching suit with ID {SuitId}...", suitId);
-        var suit = await _suitRepository.GetSuitByIdAsync(suitId);
-
-        if (suit == null)
-        {
-            _logger.LogWarning("Suit with ID {SuitId} not found.", suitId);
-            return null;
-        }
-
+        var suit =
+            await _suitRepository.GetSuitByIdAsync(suitId)
+            ?? throw new NotFoundException($"Suit with ID {suitId} not found.");
         _logger.LogInformation("Fetched suit {SuitName} (ID: {SuitId})!", suit.Name, suit.Id);
         return new SuitDTO(suit.Id, suit.Name, suit.Symbol, suit.ColorRGB);
     }
@@ -56,44 +52,30 @@ public class SuitService(ISuitRepository suitRepository, ILogger<SuitService> lo
         );
     }
 
-    public async Task<bool> UpdateSuitAsync(int suitId, UpdateSuitDTO updateSuit)
+    public async Task UpdateSuitAsync(int suitId, UpdateSuitDTO updateSuit)
     {
         _logger.LogInformation("Updating suit with ID {SuitId}...", suitId);
 
-        var existingSuit = await _suitRepository.GetSuitByIdAsync(suitId);
-
-        if (existingSuit == null)
-        {
-            _logger.LogWarning("Suit with ID {SuitId} not found for update.", suitId);
-            return false;
-        }
+        var existingSuit =
+            await _suitRepository.GetSuitByIdAsync(suitId)
+            ?? throw new NotFoundException($"Suit with ID {suitId} not found for update.");
 
         // if found apply changes
         existingSuit.Name = updateSuit.Name;
         existingSuit.Symbol = updateSuit.Symbol;
         existingSuit.ColorRGB = updateSuit.ColorRGB;
 
-        if (!await _suitRepository.UpdateSuitAsync(existingSuit))
-        {
-            _logger.LogError("Failed to update suit with ID {SuitId}.", suitId);
-            return false;
-        }
-
+        await _suitRepository.UpdateSuitAsync(existingSuit);
         _logger.LogInformation("Successfully updated suit with ID {SuitId}!", suitId);
-        return true;
     }
 
-    public async Task<bool> PartialUpdateSuitAsync(int suitId, PartialUpdateSuitDTO partialSuit)
+    public async Task PartialUpdateSuitAsync(int suitId, PartialUpdateSuitDTO partialSuit)
     {
         _logger.LogInformation("Patching suit with ID {SuitId}...", suitId);
 
-        var existingSuit = await _suitRepository.GetSuitByIdAsync(suitId);
-
-        if (existingSuit == null)
-        {
-            _logger.LogWarning("Suit with ID {SuitId} not found for patch.", suitId);
-            return false;
-        }
+        var existingSuit =
+            await _suitRepository.GetSuitByIdAsync(suitId)
+            ?? throw new NotFoundException($"Suit with ID {suitId} not found for patch.");
 
         // if found apply changes
         if (partialSuit.Name != null)
@@ -103,35 +85,18 @@ public class SuitService(ISuitRepository suitRepository, ILogger<SuitService> lo
         if (partialSuit.ColorRGB != null)
             existingSuit.ColorRGB = partialSuit.ColorRGB.Value;
 
-        if (!await _suitRepository.UpdateSuitAsync(existingSuit))
-        {
-            _logger.LogError("Failed to patch suit with ID {SuitId}.", suitId);
-            return false;
-        }
-
+        await _suitRepository.UpdateSuitAsync(existingSuit);
         _logger.LogInformation("Successfully patched suit with ID {SuitId}!", suitId);
-        return true;
     }
 
-    public async Task<bool> DeleteSuitAsync(int suitId)
+    public async Task DeleteSuitAsync(int suitId)
     {
         _logger.LogInformation("Deleting suit with ID {SuitId}...", suitId);
 
-        var existingSuit = await _suitRepository.GetSuitByIdAsync(suitId);
-
-        if (existingSuit == null)
-        {
-            _logger.LogWarning("Suit with ID {SuitId} not found for deletion.", suitId);
-            return false;
-        }
-
-        if (!await _suitRepository.DeleteSuitAsync(existingSuit))
-        {
-            _logger.LogError("Failed to delete suit with ID {SuitId}.", suitId);
-            return false;
-        }
-
+        var existingSuit =
+            await _suitRepository.GetSuitByIdAsync(suitId)
+            ?? throw new NotFoundException($"Suit with ID {suitId} not found for deletion.");
+        await _suitRepository.DeleteSuitAsync(existingSuit);
         _logger.LogInformation("Successfully deleted suit with ID {SuitId}!", suitId);
-        return true;
     }
 }

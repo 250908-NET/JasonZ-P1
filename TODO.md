@@ -20,7 +20,9 @@
         - [X] unit tests babey
         - [X] separate endpoint files
         - [ ] make update operations atomic
-        - [ ] global error handler
+        - [X] global error handler
+            - [X] make functions throw exceptions instead of false lol
+            - [X] update integration test mocks to match
 - [ ] do frontend
     - [ ] ...or not.
 - [ ] profit
