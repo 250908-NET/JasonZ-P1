@@ -12,7 +12,13 @@ public record CreateSuitDTO(string Name, char Symbol, int ColorRGB);
 public record UpdateSuitDTO(string Name, char Symbol, int ColorRGB);
 
 // input DTO for updating part of an existing suit
-public record PartialUpdateSuitDTO(string? Name, char? Symbol, int? ColorRGB);
+public record PartialUpdateSuitDTO
+{
+    // parameterless constructor
+    public string? Name { get; init; }
+    public char? Symbol { get; init; }
+    public int? ColorRGB { get; init; }
+}
 
 // --- validators ---
 

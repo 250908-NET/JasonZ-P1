@@ -161,6 +161,60 @@ public class SuitTests(WebApplicationFactory<Program> factory) : IntegrationTest
     }
 
     [Fact]
+    public async Task PartialUpdateSuit_WhenSuitExists_ReturnsNoContent()
+    {
+        // ARRANGE
+        var mockSuitService = new Mock<ISuitService>();
+        var partialDto = new PartialUpdateSuitDTO { Name = "New Patched Name" };
+
+        mockSuitService
+            .Setup(s => s.PartialUpdateSuitAsync(1, It.IsAny<PartialUpdateSuitDTO>()))
+            .Returns(Task.CompletedTask);
+
+        var client = CreateTestClient(services =>
+        {
+            services.RemoveAll<ISuitService>();
+            services.AddSingleton(mockSuitService.Object);
+        });
+
+        // ACT
+        var response = await client.PatchAsJsonAsync("/suits/1", partialDto);
+
+        // ASSERT
+        response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+    }
+
+    [Fact]
+    public async Task PartialUpdateSuit_WhenSuitDoesNotExist_ReturnsNotFound()
+    {
+        // ARRANGE
+        var mockSuitService = new Mock<ISuitService>();
+        var partialDto = new PartialUpdateSuitDTO { Name = "Does not matter" };
+        var expectedErrorMessage = "Suit with ID 999 not found for patch.";
+
+        mockSuitService
+            .Setup(s => s.PartialUpdateSuitAsync(999, It.IsAny<PartialUpdateSuitDTO>()))
+            .ThrowsAsync(new NotFoundException(expectedErrorMessage));
+
+        var client = CreateTestClient(services =>
+        {
+            services.RemoveAll<ISuitService>();
+            services.AddSingleton(mockSuitService.Object);
+        });
+
+        // ACT
+        var response = await client.PatchAsJsonAsync("/suits/999", partialDto);
+
+        // ASSERT
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        var error = await response.Content.ReadFromJsonAsync<ApiExceptionResponse>(_jsonOptions);
+        error.Should().NotBeNull();
+        error!.Status.Should().Be((int)HttpStatusCode.NotFound);
+        error.Title.Should().Be("Not Found");
+        error.Detail.Should().Be(expectedErrorMessage);
+    }
+
+    [Fact]
     public async Task DeleteSuit_WhenSuitExists_ReturnsNoContent()
     {
         // ARRANGE
