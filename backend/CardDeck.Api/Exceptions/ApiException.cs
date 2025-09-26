@@ -36,3 +36,8 @@ public class NotFoundException(string message) : ApiException(message, HttpStatu
 /// </summary>
 public class ValidationException(IReadOnlyDictionary<string, string[]> errors)
     : ApiException("One or more validation errors occurred.", HttpStatusCode.BadRequest, errors) { }
+
+/// <summary>
+/// 409 Conflict error
+/// </summary>
+public class ConflictException(string message) : ApiException(message, HttpStatusCode.Conflict);

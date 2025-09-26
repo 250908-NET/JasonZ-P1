@@ -9,6 +9,7 @@ public class Suit
     public string Name { get; set; } = null!; // nvarchar(15)
     public char Symbol { get; set; } // nchar(1) eg. ♠ ♥ ♣ ♦
     public int ColorRGB { get; set; } = 0; // default to black
+    public byte[] RowVersion { get; set; } = null!; // rowversion/timestamp for concurrency
 }
 
 // Fluent API configuration
@@ -26,5 +27,7 @@ public class SuitConfiguration : IEntityTypeConfiguration<Suit>
         builder.Property(s => s.Symbol).HasColumnType("nchar(1)");
 
         builder.Property(s => s.ColorRGB).HasDefaultValue(0);
+
+        builder.Property(s => s.RowVersion).IsRowVersion().IsConcurrencyToken();
     }
 }

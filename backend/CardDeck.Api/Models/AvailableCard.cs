@@ -9,6 +9,7 @@ public class AvailableCard
     public int CardId { get; set; } // foreign key to Card
     public Card Card { get; set; } = null!; // navigation property?
     public DateTimeOffset CreatedAt { get; private set; } // datetimeoffset
+    public byte[] RowVersion { get; set; } = null!; // rowversion/timestamp for concurrency
 }
 
 // Fluent API configuration
@@ -28,5 +29,7 @@ public class AvailableCardConfiguration : IEntityTypeConfiguration<AvailableCard
         builder.HasIndex(ac => ac.CardId).IsUnique(false);
 
         builder.Property(ac => ac.CreatedAt).HasDefaultValueSql("SYSDATETIMEOFFSET()");
+
+        builder.Property(ac => ac.RowVersion).IsRowVersion().IsConcurrencyToken();
     }
 }

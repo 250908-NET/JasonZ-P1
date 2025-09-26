@@ -30,6 +30,7 @@ public class Game
     public decimal Bet { get; set; } = 0.0m; // decimal(18,2), default to 0.0
     public GameStatus Status { get; set; } = GameStatus.DealingToPlayer; // tinyint: 0 -> dealing to player, 1 -> dealing to dealer, 2 -> round end
     public DateTimeOffset UpdatedAt { get; set; } // datetimeoffset
+    public byte[] RowVersion { get; set; } = null!; // rowversion/timestamp for concurrency
 }
 
 // Fluent API configuration
@@ -59,5 +60,7 @@ public class GameConfiguration : IEntityTypeConfiguration<Game>
             .HasDefaultValue(GameStatus.DealingToPlayer);
 
         builder.Property(g => g.UpdatedAt).ValueGeneratedOnAddOrUpdate();
+
+        builder.Property(g => g.RowVersion).IsRowVersion().IsConcurrencyToken();
     }
 }

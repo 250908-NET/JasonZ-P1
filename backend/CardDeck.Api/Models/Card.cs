@@ -16,6 +16,7 @@ public class Card
     public List<CardEffect> Effects { get; set; } = []; // nvarchar(255), default to empty string
     public DateTimeOffset CreatedAt { get; set; } // datetimeoffset
     public DateTimeOffset UpdatedAt { get; set; } // datetimeoffset
+    public byte[] RowVersion { get; set; } = null!; // rowversion/timestamp for concurrency
 }
 
 // Fluent API configuration
@@ -64,5 +65,7 @@ public class CardConfiguration : IEntityTypeConfiguration<Card>
         builder.Property(c => c.CreatedAt).HasDefaultValueSql("SYSDATETIMEOFFSET()");
 
         builder.Property(c => c.UpdatedAt).ValueGeneratedOnAddOrUpdate();
+
+        builder.Property(c => c.RowVersion).IsRowVersion().IsConcurrencyToken();
     }
 }

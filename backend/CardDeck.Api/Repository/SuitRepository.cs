@@ -1,3 +1,4 @@
+using CardDeck.Api.Exceptions;
 using CardDeck.Api.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,12 +28,30 @@ public class SuitRepository(CardDeckContext context) : ISuitRepository
     public async Task<bool> UpdateSuitAsync(Suit updateSuit)
     {
         _context.Entry(updateSuit).State = EntityState.Modified;
-        return await _context.SaveChangesAsync() > 0;
+        try
+        {
+            return await _context.SaveChangesAsync() > 0;
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            throw new ConflictException(
+                "The suit you are trying to update has been modified by another user. Please refresh and try again."
+            );
+        }
     }
 
     public async Task<bool> DeleteSuitAsync(Suit suit)
     {
         _context.Suits.Remove(suit);
-        return await _context.SaveChangesAsync() > 0;
+        try
+        {
+            return await _context.SaveChangesAsync() > 0;
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            throw new ConflictException(
+                "The suit you are trying to delete has been modified by another user. Please refresh and try again."
+            );
+        }
     }
 }

@@ -6,6 +6,7 @@ Table Suits {
   Name nvarchar(15) [not null, unique]
   Symbol nchar(1) [not null]
   ColorRGB integer [default: 0]
+  RowVersion rowversion [not null] // for optimistic concurrency control
 }
 
 // the base card definitions
@@ -16,6 +17,7 @@ Table Cards {
   Effects nvarchar(max) [not null] // json array string, eg. "[{\"operation\":\"+\",\"value\":1}]"
   CreatedAt datetimeoffset [default: `SYSDATETIMEOFFSET()`]
   UpdatedAt datetimeoffset [default: `SYSDATETIMEOFFSET()`]
+  RowVersion rowversion [not null] // for optimistic concurrency control
 }
 
 // the shared global "deck" of cards to pull from
@@ -23,6 +25,7 @@ Table AvailableCards {
   Id integer [primary key]
   CardId integer [not null]
   CreatedAt datetimeoffset [default: `SYSDATETIMEOFFSET()`]
+  RowVersion rowversion [not null] // for optimistic concurrency control
 }
 
 Table GameCards {
@@ -46,6 +49,7 @@ Table Games {
   Bet decimal(18,2) [default: 0.0]
   Status tinyint [default: 0] // 0 -> dealing to player, 1 -> dealing to dealer, 2 -> round end
   UpdatedAt datetimeoffset [default: `SYSDATETIMEOFFSET()`]
+  RowVersion rowversion [not null] // for optimistic concurrency control
 }
 
 Ref: Cards.SuitId < Suits.Id
