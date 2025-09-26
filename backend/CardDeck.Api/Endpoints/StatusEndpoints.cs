@@ -1,5 +1,6 @@
 using CardDeck.Api.Models.DTOs;
 using CardDeck.Api.Services;
+using SharpGrip.FluentValidation.AutoValidation.Endpoints.Extensions;
 
 namespace CardDeck.Api.Endpoints;
 
@@ -15,7 +16,7 @@ public static class StatusEndpoints
         {
             tags = ["Status"];
         }
-        var group = app.MapGroup(prefix).WithTags(tags);
+        var group = app.MapGroup(prefix).WithTags(tags).AddFluentValidationAutoValidation();
 
         group
             .MapGet(

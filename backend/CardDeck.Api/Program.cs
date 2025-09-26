@@ -1,6 +1,7 @@
 using CardDeck.Api.Endpoints;
 using CardDeck.Api.Middleware;
 using CardDeck.Api.Models;
+using CardDeck.Api.Models.DTOs;
 using CardDeck.Api.Repository;
 using CardDeck.Api.Services;
 using DotNetEnv;
@@ -8,28 +9,34 @@ using FluentValidation;
 using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using SharpGrip.FluentValidation.AutoValidation.Endpoints.Extensions;
 
 Env.Load(); // load .env file
 
 var builder = WebApplication.CreateBuilder(args);
 
 // register DbContext
-builder.Services.AddDbContext<CardDeckContext>(options =>
+// this code runs before Moq is able to intercept it in tests, so it needs to be skipped when in testing environment
+if (!builder.Environment.IsEnvironment("Testing"))
 {
-    // load connection string from environment variable
-    string? connectionString = builder.Configuration.GetValue<string>("DB_CONNECTION_STRING");
-    if (string.IsNullOrEmpty(connectionString))
+    builder.Services.AddDbContext<CardDeckContext>(options =>
     {
-        throw new InvalidOperationException(
-            "Connection string 'DB_CONNECTION_STRING' not found in configuration."
-        );
-    }
+        // load connection string from environment variable
+        string? connectionString = builder.Configuration.GetValue<string>("DB_CONNECTION_STRING");
+        if (string.IsNullOrEmpty(connectionString))
+        {
+            throw new InvalidOperationException(
+                "Connection string 'DB_CONNECTION_STRING' not found in configuration."
+            );
+        }
 
-    options.UseSqlServer(connectionString);
-});
+        options.UseSqlServer(connectionString);
+    });
+}
 
 // register Fluent validators
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+builder.Services.AddFluentValidationAutoValidation();
 
 // add services to the container
 builder.Services.AddOpenApi();
@@ -38,9 +45,11 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddFluentValidationRulesToSwagger();
 
 builder.Services.AddScoped<ISuitRepository, SuitRepository>();
+builder.Services.AddScoped<ICardRepository, CardRepository>();
 
 builder.Services.AddScoped<IStatusService, StatusService>();
 builder.Services.AddScoped<ISuitService, SuitService>();
+builder.Services.AddScoped<ICardService, CardService>();
 
 // configure logger
 Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(builder.Configuration).CreateLogger(); // read from appsettings.json
@@ -63,6 +72,7 @@ app.UseHttpsRedirection();
 // map endpoints
 app.MapStatusEndpoints();
 app.MapSuitEndpoints();
+app.MapCardEndpoints();
 
 // disable start message when in testing environment
 if (!app.Environment.IsEnvironment("Testing"))

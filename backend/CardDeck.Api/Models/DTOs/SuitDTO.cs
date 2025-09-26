@@ -28,8 +28,8 @@ public class CreateSuitDTOValidator : AbstractValidator<CreateSuitDTO>
         RuleFor(s => s.Name)
             .NotEmpty()
             .WithMessage("Suit name is required.")
-            .MaximumLength(15)
-            .WithMessage("Suit name cannot exceed 15 characters.");
+            .MaximumLength(32)
+            .WithMessage("Suit name cannot exceed 32 characters.");
 
         RuleFor(s => s.Symbol).NotEmpty().WithMessage("Symbol is required.");
 
@@ -46,14 +46,14 @@ public class UpdateSuitDTOValidator : AbstractValidator<UpdateSuitDTO>
         RuleFor(s => s.Name)
             .NotEmpty()
             .WithMessage("Suit name is required.")
-            .MaximumLength(15)
-            .WithMessage("Suit name cannot exceed 15 characters.");
+            .MaximumLength(32)
+            .WithMessage("Suit name cannot exceed 32 characters.");
 
         RuleFor(s => s.Symbol).NotEmpty().WithMessage("Symbol is required.");
 
         RuleFor(s => s.ColorRGB)
-            .InclusiveBetween(0, 16777215)
-            .WithMessage("ColorRGB must be between 0 and 16777215.");
+            .InclusiveBetween(0x000000, 0xFFFFFF)
+            .WithMessage("ColorRGB must be between 0x000000 and 0xFFFFFF.");
     }
 }
 
@@ -64,8 +64,8 @@ public class PartialUpdateSuitDTOValidator : AbstractValidator<PartialUpdateSuit
         RuleFor(s => s.Name)
             .NotEmpty()
             .WithMessage("Suit name cannot be empty if provided.")
-            .MaximumLength(15)
-            .WithMessage("Suit name cannot exceed 15 characters if provided.")
+            .MaximumLength(32)
+            .WithMessage("Suit name cannot exceed 32 characters if provided.")
             .When(s => s.Name != null);
 
         RuleFor(s => s.Symbol)
@@ -74,8 +74,8 @@ public class PartialUpdateSuitDTOValidator : AbstractValidator<PartialUpdateSuit
             .When(s => s.Symbol != null);
 
         RuleFor(s => s.ColorRGB)
-            .InclusiveBetween(0, 16777215)
-            .WithMessage("ColorRGB must be between 0 and 16777215 if provided.")
+            .InclusiveBetween(0x000000, 0xFFFFFF)
+            .WithMessage("ColorRGB must be between 0x000000 and 0xFFFFFF if provided.")
             .When(s => s.ColorRGB != null);
     }
 }

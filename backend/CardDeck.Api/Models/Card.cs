@@ -13,10 +13,15 @@ public class Card
     public string Rank { get; set; } = null!; // nvarchar(5)
     public int SuitId { get; set; } // foreign key to Suit
     public Suit Suit { get; set; } = null!; // navigation property?
-    public List<CardEffect> Effects { get; set; } = []; // nvarchar(255), default to empty string
+    private List<CardEffect> _effects = []; // backing field to ensure non-null
+    public List<CardEffect> Effects // nvarchar(255), default to empty string
+    {
+        get => _effects;
+        set => _effects = value ?? [];
+    }
     public DateTimeOffset CreatedAt { get; set; } // datetimeoffset
     public DateTimeOffset UpdatedAt { get; set; } // datetimeoffset
-    public byte[] RowVersion { get; set; } = null!; // rowversion/timestamp for concurrency
+    public byte[] RowVersion { get; set; } = []; // rowversion/timestamp for concurrency
 }
 
 // Fluent API configuration
@@ -27,7 +32,7 @@ public class CardConfiguration : IEntityTypeConfiguration<Card>
         builder.ToTable("Cards");
         builder.HasKey(c => c.Id);
 
-        builder.Property(c => c.Rank).HasMaxLength(5).IsRequired();
+        builder.Property(c => c.Rank).HasMaxLength(16).IsRequired();
 
         builder.Property(c => c.SuitId).IsRequired();
         builder
@@ -64,8 +69,8 @@ public class CardConfiguration : IEntityTypeConfiguration<Card>
 
         builder.Property(c => c.CreatedAt).HasDefaultValueSql("SYSDATETIMEOFFSET()");
 
-        builder.Property(c => c.UpdatedAt).ValueGeneratedOnAddOrUpdate();
+        builder.Property(c => c.UpdatedAt).HasDefaultValueSql("SYSDATETIMEOFFSET()");
 
-        builder.Property(c => c.RowVersion).IsRowVersion().IsConcurrencyToken();
+        builder.Property(c => c.RowVersion).IsRowVersion();
     }
 }

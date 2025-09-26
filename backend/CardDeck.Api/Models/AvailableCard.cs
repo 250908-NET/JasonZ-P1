@@ -9,7 +9,7 @@ public class AvailableCard
     public int CardId { get; set; } // foreign key to Card
     public Card Card { get; set; } = null!; // navigation property?
     public DateTimeOffset CreatedAt { get; private set; } // datetimeoffset
-    public byte[] RowVersion { get; set; } = null!; // rowversion/timestamp for concurrency
+    public byte[] RowVersion { get; set; } = []; // rowversion/timestamp for concurrency
 }
 
 // Fluent API configuration

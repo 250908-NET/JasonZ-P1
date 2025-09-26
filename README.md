@@ -20,12 +20,12 @@ Due: 2025-09-26
 
 ### Cards
 
-- [ ] GET /cards: get all card types (maybe paginate lol)
-- [ ] GET /cards/{cardId}: get specific card type
-- [ ] POST /cards: create new card type
-- [ ] PUT /cards/{cardId}: update existing card type
-- [ ] PATCH /cards/{cardId}: update existing card type (partial)
-- [ ] DELETE /cards/{cardId}: delete existing card type
+- [X] GET /cards: get all card types (maybe paginate lol)
+- [X] GET /cards/{cardId}: get specific card type
+- [X] POST /cards: create new card type
+- [X] PUT /cards/{cardId}: update existing card type
+- [X] PATCH /cards/{cardId}: update existing card type (partial)
+- [X] DELETE /cards/{cardId}: delete existing card type
 
 ### Deck
 

@@ -9,7 +9,7 @@ public class Suit
     public string Name { get; set; } = null!; // nvarchar(15)
     public char Symbol { get; set; } // nchar(1) eg. ♠ ♥ ♣ ♦
     public int ColorRGB { get; set; } = 0; // default to black
-    public byte[] RowVersion { get; set; } = null!; // rowversion/timestamp for concurrency
+    public byte[] RowVersion { get; set; } = []; // rowversion/timestamp for concurrency
 }
 
 // Fluent API configuration
@@ -20,7 +20,7 @@ public class SuitConfiguration : IEntityTypeConfiguration<Suit>
         builder.ToTable("Suits");
         builder.HasKey(s => s.Id);
 
-        builder.Property(s => s.Name).HasMaxLength(15).IsRequired();
+        builder.Property(s => s.Name).HasMaxLength(32).IsRequired();
         builder.HasIndex(s => s.Name).IsUnique();
 
         // char -> nchar(1)
@@ -28,6 +28,6 @@ public class SuitConfiguration : IEntityTypeConfiguration<Suit>
 
         builder.Property(s => s.ColorRGB).HasDefaultValue(0);
 
-        builder.Property(s => s.RowVersion).IsRowVersion().IsConcurrencyToken();
+        builder.Property(s => s.RowVersion).IsRowVersion();
     }
 }

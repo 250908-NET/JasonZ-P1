@@ -1,72 +1,74 @@
 using CardDeck.Api.Models.DTOs;
 using CardDeck.Api.Services;
+using FluentValidation;
+using FluentValidation.Results;
 using SharpGrip.FluentValidation.AutoValidation.Endpoints.Extensions;
 
 namespace CardDeck.Api.Endpoints;
 
-public static class SuitEndpoints
+public static class CardEndpoints
 {
-    public static void MapSuitEndpoints(
+    public static void MapCardEndpoints(
         this WebApplication app,
-        string prefix = "/suits",
+        string prefix = "/cards",
         params string[] tags
     )
     {
         if (tags is not { Length: > 0 })
         {
-            tags = ["Suits"];
+            tags = ["Cards"];
         }
         var group = app.MapGroup(prefix).WithTags(tags).AddFluentValidationAutoValidation();
 
         group
             .MapGet(
                 "/",
-                async (ISuitService service) =>
+                async (ICardService service) =>
                 {
-                    return Results.Ok(await service.GetAllSuitsAsync());
+                    return Results.Ok(await service.GetAllCardsAsync());
                 }
             )
-            .WithName("GetAllSuits")
-            .Produces<List<SuitDTO>>(StatusCodes.Status200OK)
+            .WithName("GetAllCards")
+            .Produces<List<CardDTO>>(StatusCodes.Status200OK)
             .WithOpenApi();
 
         group
             .MapGet(
-                "/{suitId:int}",
-                async (int suitId, ISuitService service) =>
+                "/{cardId:int}",
+                async (int cardId, ICardService service) =>
                 {
-                    return Results.Ok(await service.GetSuitByIdAsync(suitId));
+                    return Results.Ok(await service.GetCardByIdAsync(cardId));
                 }
             )
-            .WithName("GetSuitById")
-            .Produces<SuitDTO>(StatusCodes.Status200OK)
+            .WithName("GetCardById")
+            .Produces<CardDTO>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound)
             .WithOpenApi();
 
         group
             .MapPost(
                 "/",
-                async (CreateSuitDTO newSuit, ISuitService service) =>
+                async (CreateCardDTO newCard, ICardService service) =>
                 {
-                    var createdSuit = await service.CreateSuitAsync(newSuit);
-                    return Results.Created($"{prefix}/{createdSuit.Id}", createdSuit);
+                    var createdCard = await service.CreateCardAsync(newCard);
+                    return Results.Created($"{prefix}/{createdCard.Id}", createdCard);
                 }
             )
-            .WithName("CreateSuit")
-            .Produces<SuitDTO>(StatusCodes.Status201Created)
+            .WithName("CreateCard")
+            .Produces<CardDTO>(StatusCodes.Status201Created)
             .ProducesValidationProblem() // for 400 validation errors
             .WithOpenApi();
 
         group
             .MapPut(
-                "/{suitId:int}",
-                async (int suitId, UpdateSuitDTO updateSuit, ISuitService service) =>
+                "/{cardId:int}",
+                async (int cardId, UpdateCardDTO updateCard, ICardService service) =>
                 {
-                    await service.UpdateSuitAsync(suitId, updateSuit);
+                    await service.UpdateCardAsync(cardId, updateCard);
                     return Results.NoContent();
                 }
             )
-            .WithName("UpdateSuit")
+            .WithName("UpdateCard")
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status404NotFound)
             .ProducesValidationProblem() // for 400 validation errors
@@ -74,14 +76,14 @@ public static class SuitEndpoints
 
         group
             .MapPatch(
-                "/{suitId:int}",
-                async (int suitId, PartialUpdateSuitDTO partialSuit, ISuitService service) =>
+                "/{cardId:int}",
+                async (int cardId, PartialUpdateCardDTO patchCard, ICardService service) =>
                 {
-                    await service.PartialUpdateSuitAsync(suitId, partialSuit);
+                    await service.PartialUpdateCardAsync(cardId, patchCard);
                     return Results.NoContent();
                 }
             )
-            .WithName("PatchSuit")
+            .WithName("PartialUpdateCard")
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status404NotFound)
             .ProducesValidationProblem() // for 400 validation errors
@@ -89,14 +91,14 @@ public static class SuitEndpoints
 
         group
             .MapDelete(
-                "/{suitId:int}",
-                async (int suitId, ISuitService service) =>
+                "/{cardId:int}",
+                async (int cardId, ICardService service) =>
                 {
-                    await service.DeleteSuitAsync(suitId);
+                    await service.DeleteCardAsync(cardId);
                     return Results.NoContent();
                 }
             )
-            .WithName("DeleteSuit")
+            .WithName("DeleteCard")
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status404NotFound)
             .WithOpenApi();

@@ -28,12 +28,12 @@ public class CardDTOTests
     [Fact]
     public void CreateValidator_WhenRankIsTooLong_ShouldHaveValidationError()
     {
-        var longRank = new string('a', 6); // 6 characters
+        var longRank = new string('a', 17); // 17 characters
         var model = new CreateCardDTO(longRank, 1, []);
         var result = _createValidator.TestValidate(model);
         result
             .ShouldHaveValidationErrorFor(x => x.Rank)
-            .WithErrorMessage("Card rank cannot exceed 5 characters.");
+            .WithErrorMessage("Card rank cannot exceed 16 characters.");
     }
 
     [Fact]
@@ -67,12 +67,12 @@ public class CardDTOTests
     [Fact]
     public void UpdateValidator_WhenRankIsTooLong_ShouldHaveValidationError()
     {
-        var longRank = new string('a', 6); // 6 characters
+        var longRank = new string('a', 17); // 17 characters
         var model = new UpdateCardDTO(longRank, 1, []);
         var result = _updateValidator.TestValidate(model);
         result
             .ShouldHaveValidationErrorFor(x => x.Rank)
-            .WithErrorMessage("Card rank cannot exceed 5 characters.");
+            .WithErrorMessage("Card rank cannot exceed 16 characters.");
     }
 
     [Fact]
@@ -100,12 +100,12 @@ public class CardDTOTests
     [Fact]
     public void PartialUpdateValidator_WhenRankIsTooLong_ShouldHaveValidationError()
     {
-        var longRank = new string('a', 6); // 6 characters
+        var longRank = new string('a', 17); // 17 characters
         var model = new PartialUpdateCardDTO(longRank, null, null);
         var result = _partialUpdateValidator.TestValidate(model);
         result
             .ShouldHaveValidationErrorFor(x => x.Rank)
-            .WithErrorMessage("Card rank cannot exceed 5 characters if provided.");
+            .WithErrorMessage("Card rank cannot exceed 16 characters if provided.");
     }
 
     [Fact]

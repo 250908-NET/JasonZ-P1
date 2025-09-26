@@ -28,12 +28,12 @@ public class SuitDtoValidatorTests
     [Fact]
     public void CreateValidator_WhenNameIsTooLong_ShouldHaveValidationError()
     {
-        var longName = new string('a', 16); // 16 characters
+        var longName = new string('a', 33); // 33 characters
         var model = new CreateSuitDTO(longName, '♠', 0);
         var result = _createValidator.TestValidate(model);
         result
             .ShouldHaveValidationErrorFor(x => x.Name)
-            .WithErrorMessage("Suit name cannot exceed 15 characters.");
+            .WithErrorMessage("Suit name cannot exceed 32 characters.");
     }
 
     [Fact]
@@ -67,12 +67,12 @@ public class SuitDtoValidatorTests
     [Fact]
     public void UpdateValidator_WhenNameIsTooLong_ShouldHaveValidationError()
     {
-        var longName = new string('a', 16);
+        var longName = new string('a', 33);
         var model = new UpdateSuitDTO(longName, '♠', 0);
         var result = _updateValidator.TestValidate(model);
         result
             .ShouldHaveValidationErrorFor(x => x.Name)
-            .WithErrorMessage("Suit name cannot exceed 15 characters.");
+            .WithErrorMessage("Suit name cannot exceed 32 characters.");
     }
 
     [Fact]
@@ -100,12 +100,12 @@ public class SuitDtoValidatorTests
     [Fact]
     public void PartialUpdateValidator_WhenNameIsTooLong_ShouldHaveValidationError()
     {
-        var longName = new string('a', 16);
+        var longName = new string('a', 33);
         var model = new PartialUpdateSuitDTO(longName, null, null);
         var result = _partialUpdateValidator.TestValidate(model);
         result
             .ShouldHaveValidationErrorFor(x => x.Name)
-            .WithErrorMessage("Suit name cannot exceed 15 characters if provided.");
+            .WithErrorMessage("Suit name cannot exceed 32 characters if provided.");
     }
 
     [Fact]
@@ -123,6 +123,6 @@ public class SuitDtoValidatorTests
         var result = _partialUpdateValidator.TestValidate(model);
         result
             .ShouldHaveValidationErrorFor(x => x.ColorRGB)
-            .WithErrorMessage("ColorRGB must be between 0 and 16777215 if provided.");
+            .WithErrorMessage("ColorRGB must be between 0x000000 and 0xFFFFFF if provided.");
     }
 }

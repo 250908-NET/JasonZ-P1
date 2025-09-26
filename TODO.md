@@ -12,14 +12,14 @@
     - [X] /status endpoint
     - [X] plan endpoints
     - [ ] finish endpoints (see README for granular progress)
-        - [ ] suits
-        - [ ] cards
+        - [X] suits
+        - [X] cards
         - [ ] deck
         - [ ] blackjack
     - [ ] make the endpoints good
         - [X] unit tests babey
         - [X] separate endpoint files
-        - [ ] make update operations atomic
+        - [X] make update operations atomic
         - [X] global error handler
             - [X] make functions throw exceptions instead of false lol
             - [X] update integration test mocks to match

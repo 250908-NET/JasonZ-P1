@@ -35,16 +35,19 @@ public class CreateCardDTOValidator : AbstractValidator<CreateCardDTO>
         RuleFor(c => c.Rank)
             .NotEmpty()
             .WithMessage("Card rank is required.")
-            .MaximumLength(5)
-            .WithMessage("Card rank cannot exceed 5 characters.");
+            .MaximumLength(16)
+            .WithMessage("Card rank cannot exceed 16 characters.");
 
         RuleFor(c => c.SuitId).GreaterThan(0).WithMessage("Valid SuitId is required.");
 
+        RuleFor(c => c.Effects).NotNull().WithMessage("Effects list is required.");
+
         RuleFor(c => c.Effects)
-            .NotNull()
-            .WithMessage("Effects list cannot be null.")
-            .Must(e => e.All(effect => !string.IsNullOrWhiteSpace(effect.Operation)))
-            .WithMessage("Each effect must have a valid operation.");
+            .NotEmpty()
+            .WithMessage("Effects list cannot be empty if provided.")
+            .Must(e => e!.All(effect => !string.IsNullOrWhiteSpace(effect.Operation)))
+            .WithMessage("Each effect must have a valid operation.")
+            .When(c => c.Effects != null); // avoid null ref
     }
 }
 
@@ -55,16 +58,19 @@ public class UpdateCardDTOValidator : AbstractValidator<UpdateCardDTO>
         RuleFor(c => c.Rank)
             .NotEmpty()
             .WithMessage("Card rank is required.")
-            .MaximumLength(5)
-            .WithMessage("Card rank cannot exceed 5 characters.");
+            .MaximumLength(16)
+            .WithMessage("Card rank cannot exceed 16 characters.");
 
         RuleFor(c => c.SuitId).GreaterThan(0).WithMessage("Valid SuitId is required.");
 
+        RuleFor(c => c.Effects).NotNull().WithMessage("Effects list is required.");
+
         RuleFor(c => c.Effects)
-            .NotNull()
-            .WithMessage("Effects list cannot be null.")
-            .Must(e => e.All(effect => !string.IsNullOrWhiteSpace(effect.Operation)))
-            .WithMessage("Each effect must have a valid operation.");
+            .NotEmpty()
+            .WithMessage("Effects list cannot be empty if provided.")
+            .Must(e => e!.All(effect => !string.IsNullOrWhiteSpace(effect.Operation)))
+            .WithMessage("Each effect must have a valid operation.")
+            .When(c => c.Effects != null); // avoid null ref
     }
 }
 
@@ -75,8 +81,8 @@ public class PartialUpdateCardDTOValidator : AbstractValidator<PartialUpdateCard
         RuleFor(c => c.Rank)
             .NotEmpty()
             .WithMessage("Card rank cannot be empty if provided.")
-            .MaximumLength(5)
-            .WithMessage("Card rank cannot exceed 5 characters if provided.")
+            .MaximumLength(16)
+            .WithMessage("Card rank cannot exceed 16 characters if provided.")
             .When(c => c.Rank != null);
 
         RuleFor(c => c.SuitId)
@@ -85,7 +91,10 @@ public class PartialUpdateCardDTOValidator : AbstractValidator<PartialUpdateCard
             .When(c => c.SuitId != null);
 
         RuleFor(c => c.Effects)
-            .Must(e => e == null || e.All(effect => !string.IsNullOrWhiteSpace(effect.Operation)))
-            .WithMessage("Each effect must have a valid operation if Effects list is provided.");
+            .NotEmpty()
+            .WithMessage("Effects list cannot be empty if provided.")
+            .Must(e => e!.All(effect => !string.IsNullOrWhiteSpace(effect.Operation)))
+            .WithMessage("Each effect must have a valid operation.")
+            .When(c => c.Effects != null); // avoid null ref
     }
 }

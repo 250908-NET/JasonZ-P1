@@ -13,6 +13,7 @@ namespace CardDeck.Test;
 
 public class SuitTests(WebApplicationFactory<Program> factory) : IntegrationTestBase(factory)
 {
+    #region GET Tests
     [Fact]
     public async Task GetAllSuits_WhenSuitsExist_ReturnsOkAndListOfSuits()
     {
@@ -85,7 +86,9 @@ public class SuitTests(WebApplicationFactory<Program> factory) : IntegrationTest
         // ASSERT
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
+    #endregion
 
+    #region POST Tests
     [Fact]
     public async Task CreateSuit_WithValidData_ReturnsCreatedAndSuit()
     {
@@ -113,6 +116,10 @@ public class SuitTests(WebApplicationFactory<Program> factory) : IntegrationTest
         actualSuit.Should().BeEquivalentTo(expectedSuit);
     }
 
+    // more probablyu idk i'm tired
+    #endregion
+
+    #region PUT Tests
     [Fact]
     public async Task UpdateSuit_WhenSuitExists_ReturnsNoContent()
     {
@@ -191,7 +198,9 @@ public class SuitTests(WebApplicationFactory<Program> factory) : IntegrationTest
         error.Title.Should().Be("Conflict");
         error.Detail.Should().Be(expectedErrorMessage);
     }
+    #endregion
 
+    #region PATCH Tests
     [Fact]
     public async Task PartialUpdateSuit_WhenSuitExists_ReturnsNoContent()
     {
@@ -245,7 +254,9 @@ public class SuitTests(WebApplicationFactory<Program> factory) : IntegrationTest
         error.Title.Should().Be("Not Found");
         error.Detail.Should().Be(expectedErrorMessage);
     }
+    #endregion
 
+    #region DELETE Tests
     [Fact]
     public async Task DeleteSuit_WhenSuitExists_ReturnsNoContent()
     {
@@ -288,4 +299,5 @@ public class SuitTests(WebApplicationFactory<Program> factory) : IntegrationTest
         // ASSERT
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
+    #endregion
 }
