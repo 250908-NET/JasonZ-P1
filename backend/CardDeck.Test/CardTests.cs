@@ -36,7 +36,7 @@ public class CardTests(WebApplicationFactory<Program> factory) : IntegrationTest
         TestTimestamp
     );
 
-    #region GET Tests
+    #region GET /cards Tests
     [Fact]
     public async Task GetAllCards_WhenCardsExist_ReturnsOkAndListOfCards()
     {
@@ -107,7 +107,7 @@ public class CardTests(WebApplicationFactory<Program> factory) : IntegrationTest
     }
     #endregion
 
-    #region POST Tests
+    #region POST /cards Tests
     [Fact]
     public async Task CreateCard_WithValidData_ReturnsCreatedAndCard()
     {
@@ -189,7 +189,7 @@ public class CardTests(WebApplicationFactory<Program> factory) : IntegrationTest
     }
     #endregion
 
-    #region PUT Tests
+    #region PUT /cards/{id} Tests
     [Fact]
     public async Task UpdateCard_WhenCardExists_ReturnsNoContent()
     {
@@ -246,7 +246,7 @@ public class CardTests(WebApplicationFactory<Program> factory) : IntegrationTest
     }
     #endregion
 
-    #region PATCH Tests
+    #region PATCH /cards Tests
     [Fact]
     public async Task PartialUpdateCard_WhenCardExists_ReturnsNoContent()
     {
@@ -314,7 +314,7 @@ public class CardTests(WebApplicationFactory<Program> factory) : IntegrationTest
     // }
     #endregion
 
-    #region DELETE Tests
+    #region DELETE /cards Tests
     [Fact]
     public async Task DeleteCard_WhenCardExists_ReturnsNoContent()
     {

@@ -13,7 +13,7 @@ namespace CardDeck.Test;
 
 public class SuitTests(WebApplicationFactory<Program> factory) : IntegrationTestBase(factory)
 {
-    #region GET Tests
+    #region GET /suits Tests
     [Fact]
     public async Task GetAllSuits_WhenSuitsExist_ReturnsOkAndListOfSuits()
     {
@@ -88,7 +88,7 @@ public class SuitTests(WebApplicationFactory<Program> factory) : IntegrationTest
     }
     #endregion
 
-    #region POST Tests
+    #region POST /suits Tests
     [Fact]
     public async Task CreateSuit_WithValidData_ReturnsCreatedAndSuit()
     {
@@ -119,7 +119,7 @@ public class SuitTests(WebApplicationFactory<Program> factory) : IntegrationTest
     // more probablyu idk i'm tired
     #endregion
 
-    #region PUT Tests
+    #region PUT /suits/{id} Tests
     [Fact]
     public async Task UpdateSuit_WhenSuitExists_ReturnsNoContent()
     {
@@ -200,7 +200,7 @@ public class SuitTests(WebApplicationFactory<Program> factory) : IntegrationTest
     }
     #endregion
 
-    #region PATCH Tests
+    #region PATCH /suits/{id} Tests
     [Fact]
     public async Task PartialUpdateSuit_WhenSuitExists_ReturnsNoContent()
     {
@@ -256,7 +256,7 @@ public class SuitTests(WebApplicationFactory<Program> factory) : IntegrationTest
     }
     #endregion
 
-    #region DELETE Tests
+    #region DELETE /suits/{id} Tests
     [Fact]
     public async Task DeleteSuit_WhenSuitExists_ReturnsNoContent()
     {
