@@ -2,7 +2,7 @@
 
 ## Overview
 
-An ASP.NET Core MinimalAPI that allows users to pull and draw from a global deck, as well as play blackjack using the deck.
+An ASP.NET Core MinimalAPI that allows users to pull and draw from a global deck, as well as play blackjack using the deck. Suits and decks are highly customizable.
 The project will conclude with a presentation of working software to trainers and colleagues.
 
 Due: 2025-09-26
